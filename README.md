@@ -14,7 +14,7 @@ Clone repo and execute the following command:
 The following command is given by the Angular getting started guide:
 - 'gulp serve' or 'npm start'
 
-## Content
+## Dependencies
 ### index.html
 Index already contains some libraries that are needed for Angular 2.
 ![Screenshot index.html libs](http://puu.sh/ofL3G/079d2ed81c.png)
@@ -29,7 +29,7 @@ _Polyfills are meant to provide "future API functionality" to browsers that don'
 _"...is a set of libraries to compose asynchronous and event-based programs using observable collections and Array#extras style composition in JavaScript"_
 
 [ReactiveX Observable](http://reactivex.io/documentation/observable.html)
-#### Angular 2
+## Angular 2
 Core library.
 
 [API](https://angular.io/docs/ts/latest/api/)  +  [Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
@@ -37,8 +37,6 @@ Core library.
 Angular's http API.
 
 [HTTP API](https://angular.io/docs/ts/latest/api/#!?apiFilter=http)
-#### testing
-Angular's testing API (only used for the Http override)
 
 ### Backend
 These classes act like a backend server. In main.ts Angular's Http gets overridden by a custom implementation that calls this backend instead of actual servers.
