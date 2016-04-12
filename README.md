@@ -117,8 +117,8 @@ class ExampleService {
 }
 ```
 
-Our people service doesn't do much at this point. We want to let it retrieve the people through Http requests.
-Before Http becomes available to the application it has to be injected.
+Our people service doesn't do much at this point. We want it to communicate with our backend.
+To be able to use Http you have to inject it.
 
 ```
 In main.ts import CUSTOM_HTTP_PROVIDERS from backend/index and add it as a
@@ -126,8 +126,9 @@ dendency to the bootstrap function.
 ```
 
 Now Http is available to the injector and can be used everywhere.
-_Because of the Backend, a custom implementation of Http is required in this workshop. If you need real Http requests then HTTP_PROVDERS has to be import from the Angular library.
-This is an example how Angular's dependency injection_
+
+_Because of the Backend, a custom implementation of Http is required in this workshop. If you need real Http requests then HTTP_PROVDERS needs to be import from the Angular library.
+This is an example how Angular's dependencies can be modified without breaking the application._
 
 ```
 Inject Http into the PeopleService (Error occurs it's fine).
@@ -140,13 +141,16 @@ valid type annotations and that 'PeopleService' is decorated with
 Injectable.
 
 Just now we were fine when PeopleService didn't have any dependencies. 
-Now that we added one the injector is going to complain about the fact that it doesn't know how to resolve the dependencies.
-We have to annotate our PeopleService so the injector knows that it has to inject dependencies based on types.
+Now that we added one the injector is going complaining about the fact that it doesn't know how to resolve the dependencies.
+We have to annotate our PeopleService so the injector knows that it has to inject dependencies based on their types.
 
 ```
 Annotate PeopleService with @Injectable().
 Exceptions should be gone now.
 ```
+The injector sees that PeopleService has a dependency of type Http.
+Http is provided in our bootstrap (CUSTOM_HTTP_PROVIDERS) so PeopleService injects that implementation
+of Http.
 
 #### Printing a service.
 The PeopleService is currently bootstrapped (injected at the root) so we can use it inside our AppComponent.
@@ -161,7 +165,7 @@ This PeopleService will contain CRUD functionality for People.
 
 In Angular 2 Http requests return Observables (Rx.js) instead of Promises.
 ```
-Create a get() method in the PeopleService. We know that the server 
+Create a get() method in PeopleService. We know that the server 
 will return an array of Person so let the return type of get() be an
 Array of Person wrapped in an Observable:
 Observable<Array<Person>>
@@ -172,6 +176,10 @@ return this.Http.get('people');
 _Observable.subscribe() takes the same parameters as Promise.then(). Some of the differences between Observables and Promises are:
 - Observables are lazy loaded (not activated until subscribed)
 - Observables are cancelable (unsubscribe)_
+
+```javascript
+new Observable().subscribe(successFn, errorFn, notifyFn);
+```
 
 #### Testing PeopleService
 ```javascript
