@@ -68,11 +68,14 @@ Currently main.ts is trying to construct the root of the component tree by boots
 ```
 Create a new file called 'app.component.ts' inside /app/. 
 Create a component named AppComponent and export its class.
-When inside of the Component decorator, hit ctrl+space for a look at
-what properties are available. 
+
+Click inside of the Component's decorator { } and hit ctrl+space
+to see the available properties.
+
 Give the AppComponent a selector 'myApp' which will be linked to the
 <my-app>Loading...</my-app> tag inside index.html.
 ```
+[ComponentMetaData API](https://angular.io/docs/ts/latest/api/core/ComponentMetadata-class.html)
 
 ### Assignment 2 Configure Component
 ![Webstorm import autocompletion](https://blog.jetbrains.com/webstorm/files/2016/04/completion-for-imports.png)
