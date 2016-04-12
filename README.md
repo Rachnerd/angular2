@@ -62,7 +62,7 @@ Create a component named AppComponent and export its class.
 Click inside of the Component's decorator { } and hit ctrl+space
 to see the available properties.
 
-Give the AppComponent a selector 'myApp' which will be linked to the
+Give AppComponent a selector 'myApp' which will be linked to the
 <my-app>Loading...</my-app> tag inside index.html.
 
 Go back to main.ts and import AppComponent and bootstrap it like this:
@@ -110,6 +110,14 @@ In Angular 2 we can also choose to let only certain parts have access to certain
 For now, add PeopleService as a dependency inside the bootstrap function.
 ```
 
+#### Logging a service.
+The PeopleService is currently bootstrapped (injected at the root) so we can use it inside our AppComponent.
+
+```
+Inject the PeopleService into the constructor of AppComponent and log the service.
+In the console should be a PeopleService object.
+```
+
 #### Adding a dependency to a service
 ```javascript
 class ExampleService {
@@ -141,7 +149,7 @@ valid type annotations and that 'PeopleService' is decorated with
 Injectable.
 
 Just now we were fine when PeopleService didn't have any dependencies. 
-Now that we added one the injector is going complaining about the fact that it doesn't know how to resolve the dependencies.
+Now that we added one the injector complains about the fact that it doesn't know how to resolve the dependencies.
 We have to annotate our PeopleService so the injector knows that it has to inject dependencies based on their types.
 
 ```
@@ -152,15 +160,7 @@ The injector sees that PeopleService has a dependency of type Http.
 Http is provided in our bootstrap (CUSTOM_HTTP_PROVIDERS) so PeopleService injects that implementation
 of Http.
 
-#### Printing a service.
-The PeopleService is currently bootstrapped (injected at the root) so we can use it inside our AppComponent.
-
-```
-Inject the PeopleService into the constructor of AppComponent and log the service.
-In the console should be a PeopleService object that has Http as a property.
-```
-
-#### Adding methods to PeopleService
+#### Adding methods to PeopleService (Observables)
 This PeopleService will contain CRUD functionality for People.
 
 In Angular 2 Http requests return Observables (Rx.js) instead of Promises.
@@ -195,9 +195,10 @@ In AppComponent's constructor, subscribe to PeopleService's get method.
 
 The body of the response contains an array of people but is still a JSON string.
 This is a problem because we defined that PeopleServic's get() method will return 
-an Observable<Array<Person>> and not an Observable<string>. To get plain JS instead of JSON
-the Angular Response type has a json() method that returns JS.
+an Observable<Array<Person>> and not an Observable<string>. 
+
 ```
+Log plain JS in stead of a json string.
 res.json()
 ```
 
@@ -213,11 +214,12 @@ In PeopleService, call .map on the http get request.
 return http.get().map(res => res.json())
 
 ```
-Now AppComponent receives an array of people as promised.
+Now AppComponent receives an array of people (inside an Observable) as promised.
 
 ## Assignment 4 PeopleListComponent
 #### Creating PeopleListComponent
-Now that the PeopleService is able to retrieve some people, a new component is needed.
+To do something with the retrieved Person array we're going to move this functionality
+to a PeopleListComponent.
 ```
 Create a new folder called 'people-list' inside /people and fill it with:
 people-list.html + people-list.ts
@@ -238,12 +240,12 @@ Decorate the AppComponent with a RouteConfig.
 path: '/people',
 name: 'PeopleList',
 component: PeopleListComponent
-
+```
 Just like in Angular 1 we need to define a viewport.
 In Angular 2 it's called router-outlet and is a component itself.
-Give the directives array of AppComponent (decorator) with so called
-ROUTER_DIRECTIVES. Now we can use router-outlet.
-
+```
+Insert in the directives array of AppComponent (decorator) ROUTER_DIRECTIVES. 
+Now we can use router-outlet.
 Set the template of AppComponent to '<router-outlet></router-outlet>'.
 ```
 
