@@ -269,15 +269,13 @@ provide function.
 ```javascript
 //Example service
 export class ExampleService {
-    constructor(public MyDep: MyDep) { 
-        MyDep.doSomething();
-    }
+    constructor(public MyDep: MyDep) { }
 }
 //Example component
 @Component({
     /...
     providers: [ExampleService, provide(MyDep, {
-       useClass: OtherDep //<- OtherDep should have a doSomething method for this to work 
+       useClass: OtherDep
     })];
 })
 class Cmp {
