@@ -25,10 +25,12 @@ _"Provides compatibility shims so that legacy JavaScript engines behave as close
 _Polyfills are meant to provide "future API functionality" to browsers that don't support certain features yet._
 #### Rx.Js
 _"...is a set of libraries to compose asynchronous and event-based programs using observable collections and Array#extras style composition in JavaScript"_
+
 [ReactiveX Observable](http://reactivex.io/documentation/observable.html)
 #### Angular 2
 Core library.
-[API](https://angular.io/docs/ts/latest/api/)[Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
+
+[API](https://angular.io/docs/ts/latest/api/)  [Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
 #### Http
 Angular's http API.
 #### testing
