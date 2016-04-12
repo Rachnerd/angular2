@@ -31,8 +31,8 @@ Core library.
 [API](https://angular.io/docs/ts/latest/api/)  +  [Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
 
 ## Backend
-These classes act like a backend server. In main.ts Angular's Http gets overridden by a custom implementation that calls this backend instead of actual servers.
-Because of this override the following requests are available for this workshop:
+At some point in this workshop Http gets implemented. In stead of using the Http from the Angular API, a customized Http class
+is used that is configured to call a static (fake) backend. The following requests will be available in this workshop:
 ```
 Request                     Response  
 Method    Url               status    body              headers
