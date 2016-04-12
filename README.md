@@ -8,23 +8,28 @@ If you would like to play with the ES6 features during this workshop, take a loo
 
 ##Install
 Clone repo and execute the following command:
-- npm install
+- 'npm install'
 
 ##Run
 The following command is given by the Angular getting started guide:
-- gulp serve.
+- 'gulp serve' or 'npm start'
 
 ## Content
 ### index.html
+Index already contains some libraries that are needed for Angular 2.
+Here's a brief summary of what those libraries do.
+
 #### Shims and polyfills
-_"Provides compatibility shims so that legacy JavaScript engines behave as closely as possible to ECMAScript 6 (Harmony)."  - ES6-shim_
+_"Provides compatibility shims so that legacy JavaScript engines behave as closely as possible to ECMAScript 6 (Harmony)."  - [ES6-shim](https://github.com/paulmillr/es6-shim)_
 
 _Polyfills are meant to provide "future API functionality" to browsers that don't support certain features yet._
 #### Rx.Js
 _"...is a set of libraries to compose asynchronous and event-based programs using observable collections and Array#extras style composition in JavaScript"_
-#### angular 2
+[ReactiveX Observable](http://reactivex.io/documentation/observable.html)
+#### Angular 2
 Core library.
-#### http
+[API](https://angular.io/docs/ts/latest/api/)[Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
+#### Http
 Angular's http API.
 #### testing
 Angular's testing API (only used for the Http override)
