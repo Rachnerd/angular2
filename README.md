@@ -12,7 +12,8 @@ Clone repo and execute the following command:
 
 ##Run
 The following command is given by the Angular getting started guide:
-- npm run start.
+- gulp serve.
+
 ## Content
 ### index.html
 #### Shims and polyfills
