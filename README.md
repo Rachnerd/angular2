@@ -15,11 +15,7 @@ The following command is given by the Angular getting started guide:
 - 'gulp serve' or 'npm start'
 
 ## Dependencies
-### index.html
-Index already contains some libraries that are needed for Angular 2.
 ![Screenshot index.html libs](http://puu.sh/ofL3G/079d2ed81c.png)
-
-Here's a brief summary of what those libraries do.
 
 #### Shims and polyfills
 _"Provides compatibility shims so that legacy JavaScript engines behave as closely as possible to ECMAScript 6 (Harmony)."  - [ES6-shim](https://github.com/paulmillr/es6-shim)_
@@ -38,7 +34,7 @@ Angular's http API.
 
 [HTTP API](https://angular.io/docs/ts/latest/api/#!?apiFilter=http)
 
-### Backend
+## Backend
 These classes act like a backend server. In main.ts Angular's Http gets overridden by a custom implementation that calls this backend instead of actual servers.
 Because of this override the following requests are available for this workshop:
 ```
