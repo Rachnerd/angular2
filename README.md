@@ -30,14 +30,16 @@ _"...is a set of libraries to compose asynchronous and event-based programs usin
 #### Angular 2
 Core library.
 
-[API](https://angular.io/docs/ts/latest/api/)  [Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
+[API](https://angular.io/docs/ts/latest/api/)  +  [Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
 #### Http
 Angular's http API.
+
+[HTTP API](https://angular.io/docs/ts/latest/api/#!?apiFilter=http)
 #### testing
 Angular's testing API (only used for the Http override)
 
-### backend
-These classes act like a backend server. In main.ts Angular's Http gets overridden by a custom implementation that calls this backend instead of doing actual requests.
+### Backend
+These classes act like a backend server. In main.ts Angular's Http gets overridden by a custom implementation that calls this backend instead of actual servers.
 Because of this override the following requests are available for this workshop:
 ```
 Request                     Response  
