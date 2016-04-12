@@ -17,7 +17,7 @@ The following command is given by the Angular getting started guide:
 ## Content
 ### index.html
 Index already contains some libraries that are needed for Angular 2.
-![Screenshot index.html libs](http://puu.sh/ofKXm/a59389bb37.png)
+![Screenshot index.html libs](http://puu.sh/ofL3G/079d2ed81c.png)
 
 Here's a brief summary of what those libraries do.
 
