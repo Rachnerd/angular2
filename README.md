@@ -1,3 +1,18 @@
+# Angular2Workshop
+###Quintor
+#####Rachèl Heimbach
+This workshop introduces its participants to components, dependency injection and data-binding.
+A great source to help out with the Angular syntax is this [cheat sheet](https://angular.io/cheatsheet).
+
+If you would like to play with the ES6 features during this workshop, take a look at [ES6 feature list](http://es6-features.org/#Constants).
+
+##Install
+Clone repo and execute the following command:
+- npm install
+
+##Run
+The following command is given by the Angular getting started guide:
+- npm run start.
 ## Content
 ### index.html
 #### Shims and polyfills
