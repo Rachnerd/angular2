@@ -178,7 +178,7 @@ _Observable.subscribe() takes the same parameters as Promise.then(). Some of the
 - Observables are cancelable (unsubscribe)_
 
 ```javascript
-new Observable().subscribe(successFn, errorFn, notifyFn);
+new Observable().subscribe(success, error, notify);//use lambda's (ES6 arrow functions)
 ```
 
 #### Testing PeopleService
@@ -226,10 +226,17 @@ people-list.html + people-list.ts
 
 Create a component called PeopleListComponent and export it.
 Configure the component so it is linked to its template and has a 
-selector of 'people-list'.
+selector called 'people-list'.
 ```
 
 #### Routing to PeopleListComponent
+```javascript
+@RouteConfig([
+     {
+         path:'/example', component: ExampleComponent, name: 'Example', useAsDefault:true
+     }
+])
+```
 This people functionality should be separated from the rest of the application.
 Before we can use routing we have to import its providers.
 ```
@@ -244,8 +251,11 @@ component: PeopleListComponent
 Just like in Angular 1 we need to define a viewport.
 In Angular 2 it's called router-outlet and is a component itself.
 ```
-Insert in the directives array of AppComponent (decorator) ROUTER_DIRECTIVES. 
+Provide AppComponent with ROUTER_DIRECTIVES by inserting it into the 
+directives array (inside component decorator). 
+```
 Now we can use router-outlet.
+```
 Set the template of AppComponent to '<router-outlet></router-outlet>'.
 ```
 
@@ -258,21 +268,21 @@ provide function.
 
 ```javascript
 //Example service
-export class Example {
-    constructor(MyDep: MyDep) { 
+export class ExampleService {
+    constructor(public MyDep: MyDep) { 
         MyDep.doSomething();
     }
 }
-//Example override in bootstrap (main.ts) or providers (any component decorator).
+//Example component
 @Component({
     /...
-    providers: [Example, provide(MyDep, {
+    providers: [ExampleService, provide(MyDep, {
        useClass: OtherDep //<- OtherDep should have a doSomething method for this to work 
     })];
 })
 class Cmp {
-    constructor(MyDep: MyDep) {
-        MyDep; // <- actually OtherDep
+    constructor(ExampleService: ExampleService) {
+        ExampleService.MyDep; // <- actually OtherDep
     }
 }
 ```
