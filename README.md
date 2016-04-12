@@ -29,10 +29,6 @@ _"...is a set of libraries to compose asynchronous and event-based programs usin
 Core library.
 
 [API](https://angular.io/docs/ts/latest/api/)  +  [Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
-#### Http
-Angular's http API.
-
-[HTTP API](https://angular.io/docs/ts/latest/api/#!?apiFilter=http)
 
 ## Backend
 These classes act like a backend server. In main.ts Angular's Http gets overridden by a custom implementation that calls this backend instead of actual servers.
@@ -68,6 +64,11 @@ to see the available properties.
 
 Give the AppComponent a selector 'myApp' which will be linked to the
 <my-app>Loading...</my-app> tag inside index.html.
+
+Go back to main.ts and import AppComponent and bootstrap it like this:
+```
+```javascript
+bootstrap(AppComponent, []);
 ```
 [ComponentMetaData API](https://angular.io/docs/ts/latest/api/core/ComponentMetadata-class.html)
 
@@ -110,15 +111,25 @@ For now, add PeopleService as a dependency inside the bootstrap function.
 ```
 
 #### Adding a dependency to a service
-```
+```javascript
 class ExampleService {
     constructor(private ExampleDep: ExampleDep) {}//ExampleDep gets injected
 }
 ```
 
 Our people service doesn't do much at this point. We want to let it retrieve the people through Http requests.
+Before Http becomes available to the application it has to be injected.
 
-```javascript
+```
+In main.ts import CUSTOM_HTTP_PROVIDERS from backend/index and add it as a
+dendency to the bootstrap function. 
+```
+
+Now Http is available to the injector and can be used everywhere.
+_Because of the Backend, a custom implementation of Http is required in this workshop. If you need real Http requests then HTTP_PROVDERS has to be import from the Angular library.
+This is an example how Angular's dependency injection_
+
+```
 Inject Http into the PeopleService (Error occurs it's fine).
 ```
 
