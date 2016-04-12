@@ -18,6 +18,7 @@ The following command is given by the Angular getting started guide:
 ### index.html
 Index already contains some libraries that are needed for Angular 2.
 ![Screenshot index.html libs](http://puu.sh/ofKXm/a59389bb37.png)
+
 Here's a brief summary of what those libraries do.
 
 #### Shims and polyfills
