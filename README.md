@@ -3,8 +3,7 @@
 #####Rachèl Heimbach
 This workshop introduces its participants to components, dependency injection and data-binding.
 A great source to help out with the Angular syntax is this [cheat sheet](https://angular.io/cheatsheet).
-
-If you would like to play with the ES6 features during this workshop, take a look at [ES6 feature list](http://es6-features.org/#Constants).
+Here you can find one of the first Angular 2 style guides (draft) [style guide](https://github.com/johnpapa/angular-styleguide/blob/master/a2/README.md)
 
 ##Install
 Clone repo and execute the following command:
