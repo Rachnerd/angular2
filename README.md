@@ -69,6 +69,7 @@ Go back to main.ts and import AppComponent and bootstrap it like this:
 bootstrap(AppComponent, []);
 ```
 Not using Webstorm 2016.1 or just curious about the content of the component decorator?
+
 Checkout:
 
 [ComponentMetaData API](https://angular.io/docs/ts/latest/api/core/ComponentMetadata-class.html)
@@ -116,7 +117,6 @@ The PeopleService is currently bootstrapped (injected at the root) so we can use
 
 ```
 Inject the PeopleService into the constructor of AppComponent and log the service.
-In the console should be a PeopleService object.
 ```
 
 #### Adding a dependency to a service
@@ -134,15 +134,18 @@ In main.ts import CUSTOM_HTTP_PROVIDERS from backend/index and add it as a
 dendency to the bootstrap function. 
 ```
 
+###### Injecting Http
 Now Http is available to the injector and can be used everywhere.
 
-_Because of the Backend, a custom implementation of Http is required in this workshop. If you need real Http requests then HTTP_PROVDERS needs to be import from the Angular library.
-This is an example how Angular's dependencies can be modified without breaking the application._
+_Because of the Backend, a custom implementation of Http is required for this workshop. If you want real Http requests then HTTP_PROVDERS needs to be import from the Angular library.
+This is an example of how Angular's dependencies can be modified without breaking the application._
 
 ```
 Inject Http into the PeopleService (Error occurs it's fine).
 ```
 
+
+###### Exception!
 Now we run into a problem:
 ```
 EXCEPTION: Cannot resolve all parameters for 'PeopleService'(?).
@@ -205,6 +208,8 @@ is ok because the return observable receives the response on runtime, not compil
 Log plain JS in stead of a json string.
 res.json()
 ```
+
+###### Rx.js
 
 To prevent the need of calling this json method every time we have to apply an operation on the Observable.
 The Rx.js library provides multiple operators for observables (kinda like stream operations). For this workshop only
