@@ -57,8 +57,7 @@ export class ExampleComponent {
 ![Webstorm component creation](https://blog.jetbrains.com/webstorm/files/2016/04/auto-import-ts.gif)
 Currently main.ts is trying to construct the root of the component tree by bootstrapping a component.
 ```
-Create a new file called 'app.component.ts' inside /app/. 
-Create a component named AppComponent and export its class.
+Create a component named AppComponent (app.component.ts) and export its class.
 
 Click inside of the Component's decorator { } and hit ctrl+space
 to see the available properties.
@@ -67,10 +66,11 @@ Give AppComponent a selector 'myApp' which will be linked to the
 <my-app>Loading...</my-app> tag inside index.html.
 
 Go back to main.ts and import AppComponent and bootstrap it like this:
-```
-```javascript
 bootstrap(AppComponent, []);
 ```
+Not using Webstorm 2016.1 or just curious about the content of the component decorator?
+Checkout:
+
 [ComponentMetaData API](https://angular.io/docs/ts/latest/api/core/ComponentMetadata-class.html)
 
 ### Assignment 2 Configure Component
