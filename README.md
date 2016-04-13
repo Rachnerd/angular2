@@ -143,10 +143,12 @@ Inject Http into the PeopleService (Error occurs it's fine).
 ```
 
 Now we run into a problem:
+```
 EXCEPTION: Cannot resolve all parameters for 'PeopleService'(?).
 Make sure that all the parameters are decorated with Inject or have 
 valid type annotations and that 'PeopleService' is decorated with 
 Injectable.
+```
 
 Just now we were fine when PeopleService didn't have any dependencies. 
 Now that we added one the injector complains about the fact that it doesn't know how to resolve the dependencies.
@@ -498,7 +500,9 @@ When clicking the button, PeopleListComponent's updatePerson function
 should print a person.
 
 Now we have a PersonComponent with a public api:
+
 In (properties): person of type Person.
+
 Out (events): update event that emits a person.
 
 #### Updating a person in PersonComponent
