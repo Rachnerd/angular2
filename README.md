@@ -2,7 +2,9 @@
 ###Quintor
 #####Rachèl Heimbach
 This workshop introduces its participants to components, dependency injection and data-binding.
+
 A great source to help out with the Angular syntax is this [cheat sheet](https://angular.io/cheatsheet).
+
 Here you can find one of the first Angular 2 style guides (draft) [style guide](https://github.com/johnpapa/angular-styleguide/blob/master/a2/README.md)
 
 ##Install
