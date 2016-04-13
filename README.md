@@ -355,7 +355,7 @@ our template.
 
 ```
 Implement Angular 2's equivalant to ng-repeat called *ngFor.
-Render the names of the people.
+Render the names of the people (give each person tag a 'row' class).
 ```
 
 We want to be able to add someone to this list. Instead of the usual
@@ -508,7 +508,6 @@ In (properties): person of type Person.
 Out (events): update event that emits a person.
 
 #### Updating a person in PersonComponent
-Here follow some assignments that require previously explained techniques.
 ```
 Implement the update (PUT) method of PeopleService.
 PUT only returns a status. So if there are no errors everything 
@@ -520,6 +519,15 @@ worked out.
 Implement a button in PeopleListComponent that deletes a person from the 
 server.
 ```
+
+```
+Create a HomeComponent. Assign path '/' to the HomeComponent (routing).
+Import PeopleListComponent and add it to HomeComponent's directives array.
+Add <ng-content> somewhere in PeopleListComponent's template and 
+put some custom html in HomeComponent's template inside the <people-list>
+element.
+```
+
 
 ```
 Implement some more directives of the Angular 2 core.
