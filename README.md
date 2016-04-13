@@ -175,8 +175,8 @@ Observable<Array<Person>>
 Inside the method: 
 return this.Http.get('people');
 ```
-_Observable.subscribe() takes the same parameters as Promise.then(). Some of the differences between Observables and Promises are:
-- Observables are lazy loaded (not activated until subscribed)
+_Observable.subscribe() takes the same parameters as Promise.then(). Some of the differences between Observables and Promises are:_
+_- Observables are lazy loaded (not activated until subscribed)
 - Observables are cancelable (unsubscribe)_
 
 ```javascript
@@ -197,7 +197,8 @@ In AppComponent's constructor, subscribe to PeopleService's get method.
 
 The body of the response contains an array of people but is still a JSON string.
 This is a problem because we defined that PeopleServic's get() method will return 
-an Observable<Array<Person>> and not an Observable<string>. 
+an Observable<Array<Person>> and not an Observable<string>. The compiler thinks this
+is ok because the return observable receives the response on runtime, not compiltime.
 
 ```
 Log plain JS in stead of a json string.
@@ -205,7 +206,7 @@ res.json()
 ```
 
 To prevent the need of calling this json method every time we have to apply an operation on the Observable.
-The Rx.js library provides multiple operators for observables (kinda like streams). For this workshop only
+The Rx.js library provides multiple operators for observables (kinda like stream operations). For this workshop only
 map will be used.
 
 ```
