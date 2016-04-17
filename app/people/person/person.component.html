@@ -1,0 +1,13 @@
+<div class="person">
+    <div *ngIf="!editMode">
+        <h3>{{backup.firstName + ' ' + backup.lastName}}</h3>
+        <button (click)="edit()">edit</button>
+        <button (click)="deletePerson()" class="second">delete</button>
+    </div>
+    <div *ngIf="editMode">
+        <input [(ngModel)]="person.firstName">
+        <input [(ngModel)]="person.lastName">
+        <button (click)="save()">save</button>
+        <button (click)="cancel()" class="second">cancel</button>
+    </div>
+</div>

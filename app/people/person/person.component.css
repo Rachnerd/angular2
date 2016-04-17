@@ -1,0 +1,22 @@
+.person {
+    border-bottom: 1px solid black;
+    padding: 0 1em 1em 1em;
+    height: 4em;
+    position: relative;
+    overflow: hidden;
+}
+.person h3 {
+    margin-top: 0;
+}
+.person input {
+    margin-bottom: 1.4em;
+    float:left;
+}
+.person button {
+    position: absolute;
+    bottom: 1em;
+    left: 1em;
+}
+.person button.second {
+    left: 5em;
+}

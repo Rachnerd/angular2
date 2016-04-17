@@ -6,6 +6,8 @@ interface IPerson {
     lastName:string;
     id:number;
 }
+
+
 /**
  * Person class that implements IPerson.
  */
@@ -30,7 +32,7 @@ export class Database {
      * implementation.
      * @type {{people: {all: Person[], create: (function(IPerson): Person), update: (function(number, IPerson): *|null)}}}
      */
-    private static database = {
+    public static database = {
         people: {
             all: [
                 new Person({firstName: 'Jan', lastName: 'Berg', id: 1}),
@@ -41,9 +43,11 @@ export class Database {
                     lastName = data.lastName,
                     people = Database.database.people.all;
                 if(!!firstName && !!lastName) {
-                    var id = (!!people[people.length - 1]) ? people[people.length - 1].id + 1 : 1,
+                    let id = (!!people[people.length - 1]) ? people[people.length - 1].id + 1 : 1,
                         person = new Person({firstName, lastName, id});
                     people.push(person);
+
+                    (<any>window.localStorage).people = JSON.stringify(people);
                     return person;
                 }
             },
@@ -54,6 +58,7 @@ export class Database {
                 if(!!person && (!!firstName || !!lastName)) {
                     person.firstName = firstName || person.firstName;
                     person.lastName = lastName || person.lastName;
+                    (<any>window.localStorage).people = JSON.stringify(Database.database.people.all);
                     return person;
                 }
             }
@@ -112,8 +117,16 @@ export class Database {
         for(let i = 0; i < this.database[db].all.length;i ++) {
             if(this.database[db].all[i].id == id) {
                 this.database[db].all.splice(i, 1);
+                (<any>window.localStorage).people = JSON.stringify(this.database[db].all);
                 return `db: Deleted id ${id}`
             }
         }
     }
+}
+// window.localStorage.clear();
+let localPeople = (<any>window.localStorage).people;
+if(!!localPeople) {
+    Database.database.people.all = JSON.parse(localPeople);
+}else {
+    localPeople = JSON.stringify(Database.database.people.all);
 }

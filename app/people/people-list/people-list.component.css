@@ -1,0 +1,10 @@
+.error {
+    color: red;
+    font-size: .8em;
+    margin-top: 0;
+}
+form {
+    padding-left: 1em;
+    position: fixed;
+    top: 44em;
+}

@@ -29,7 +29,7 @@ export class Backend {
      */
     static post(route: IRoute, data:any): any {
         var newData = Database.create(route.name, data);
-        if((!newData)) return { error: `Db ${route.name} wrong parameters`, status: 400, statusText: 'Wrong parameters'};
+        if((!newData)) return { error: `Db ${route.name} wrong parameters`, status: 400, statusText: 'Bad Request'};
         return {status: 201, statusText: 'Created', headers: [{name: 'location', value: `${route.url}/${newData.id}`}]};
     }
     /**
@@ -41,13 +41,13 @@ export class Backend {
      */
     static put(route:IRoute, id:number, data:any): any {
         var newData = Database.update(route.name, id, data);
-        if((!newData)) return { error: `Db ${route.name} non-existing id or wrong parameters`, status: 400, statusText: `Can't update`};
+        if((!newData)) return { error: `Db ${route.name} non-existing id or wrong parameters`, status: 400, statusText: `Bad Request`};
         return {status: 204, statusText: 'No content'}
     }
 
     static delete(route:IRoute, id:number): any {
         var deletedData = Database.delete(route.name, id);
-        if((!deletedData)) return { error: `Db ${route.name} non-existing id`, status: 400, statusText: `Can't delete`};
+        if((!deletedData)) return { error: `Db ${route.name} non-existing id`, status: 400, statusText: `Bad Request`};
         return {status: 204, statusText: 'No content'};
     }
 

@@ -1,0 +1,9 @@
+<p *ngFor="#person of people;#i = index;">
+    <person [person]="person" (update)="onUpdate($event, i)" (delete)="onDelete($event, i)"></person>
+</p>
+<form (ngSubmit)="addPerson(firstName, lastName)">
+    <input placeholder="First name" #firstName>
+    <input placeholder="Last name" #lastName>
+    <button type="submit">Submit</button>
+    <p class="error">{{errorMessage}}</p>
+</form>
