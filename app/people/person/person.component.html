@@ -7,7 +7,7 @@
     <div *ngIf="editMode">
         <input [(ngModel)]="person.firstName">
         <input [(ngModel)]="person.lastName">
-        <button (click)="save()">save</button>
+        <button (click)="save()" [disabled]="!hasChanged()">save</button>
         <button (click)="cancel()" class="second">cancel</button>
     </div>
 </div>

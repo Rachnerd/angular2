@@ -12,11 +12,11 @@ import {Person} from "./person.model";
 export class PeopleService {
     /**
      * Constructor of PeopleService. Injection takes place here.
-     * (private http: Http) {} is syntax sugar for: 
+     * (private rest: Http) {} is syntax sugar for: 
      * 
-     * private http; 
-     * constructor(http: Http) {
-     *     this.http = http;
+     * private rest; 
+     * constructor(rest: Http) {
+     *     this.rest = rest;
      * }
      * 
      * @param http  Http service.

@@ -1,6 +1,9 @@
-export interface Person {
+export interface LocalPerson {
     firstName:string;
     lastName:string;
-    id?: number;
-    points?:number;
+}
+
+export interface Person extends LocalPerson{
+    id: number;
+    points:number;
 }

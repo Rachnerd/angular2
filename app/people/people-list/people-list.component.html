@@ -1,9 +1,25 @@
-<p *ngFor="#person of people;#i = index;">
-    <person [person]="person" (update)="onUpdate($event, i)" (delete)="onDelete($event, i)"></person>
-</p>
-<form (ngSubmit)="addPerson(firstName, lastName)">
-    <input placeholder="First name" #firstName>
-    <input placeholder="Last name" #lastName>
-    <button type="submit">Submit</button>
-    <p class="error">{{errorMessage}}</p>
-</form>
+<my-header title="List of people">
+    <!--<div class="left">-->
+        <!--<button>Left</button>-->
+    <!--</div>-->
+    <!--<div class="right">-->
+        <!--<button>Right</button>-->
+        <!--<div test>-->
+        <!--</div>-->
+    <!--</div>-->
+    Adasdasd
+</my-header>
+<div id="peopleList">
+    <p *ngFor="#person of people;#i = index;">
+        <person [person]="person" (update)="onUpdate($event, i)" (delete)="onDelete($event, i)"></person>
+    </p>
+    <form (ngSubmit)="addPerson(firstName, lastName)">
+        <input placeholder="First name" #firstName>
+        <input placeholder="Last name" #lastName>
+        <button type="submit">Submit</button>
+        <p class="error">{{errorMessage}}</p>
+    </form>
+</div>
+<div hooverColor>
+    {{ 2 |  exponentialStrength:10}}
+</div>

@@ -72,21 +72,10 @@ body {
   height: 40em;
   background-color: #FAFAFA;
 }
-header {
-  height: 6em;
-  text-align: center;
-  color: white;
-  position: absolute;
-  padding-top: .7em;
-  box-sizing: border-box;
-  z-index: 99;
-  width: 100%;
-  top:0;
-  background-color: #607D8B;
-}
+
 #application {
   position: relative;
-  padding-top: 7em;
+  padding-top: 6em;
 }
 
 .row {

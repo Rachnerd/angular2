@@ -1,6 +1,6 @@
 .person {
     border-bottom: 1px solid black;
-    padding: 0 1em 1em 1em;
+    padding: 1em;
     height: 4em;
     position: relative;
     overflow: hidden;

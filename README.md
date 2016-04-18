@@ -45,496 +45,297 @@ DELETE    /people/:id       204
 ```
 
 ## Assignments
-### Assignment 1 Component
-```javascript
-@Component({
-    ...
-})
-export class ExampleComponent {
+### Assignment 1 Base code.
+###### PeopleService
+During the previous workshop a PeopleService was created.
+```
+Take a look at the PeopleService of this branch and read the documentation so
+you'll understand exactly what is happening.
+```
 
+###### PeopleListComponent
+```
+Take a look at the PeopleListComponent and read the comments.
+```
+
+###### PersonComponent
+```
+Take a look at the PersonComponent and read the comments.
+```
+
+### Assignment 2 RestService
+###### Why this assignment?
+Currently there's a PeopleService that contains rest functionality. The url /people is what makes
+this Service very specific and not reusable. We're going to fix this by making a generic RestService that
+can be configured through dependency injection (provide).
+
+#### Copying functionality
+We're going to let the PeopleService like it is.
+```
+Copy the methods of PeopleService into RestService.
+```
+
+#### Dependencies
+###### String
+Before we can implement the RestService correctly, we have to setup its
+dependencies. The ideal situation would be a RestService that depends on
+the Http service and an Url.
+```
+Inject besides Http a string called url.
+```
+
+```javascript
+constructor(private http:Http, private url:string)
+```
+
+```
+Add RestService to the providers: [] of PeopleListComponent and look at
+the red errors of death in the console.
+```
+
+The injector complains because it has no string to pass to the url dependency of RestService.
+The url string has to be provided.
+
+```javscript
+//providing a String dependency
+provide(String, {useValue: ''})
+```
+
+```
+Provide a String '/people' in PeopleListComponent's providers array.
+```
+Now the injector passes the '/people' string into the RestService, meaning that we've set a
+property in a Service by using dependency injection.
+
+You might have noticed that this solution is terrible. Now the injector
+will provide '/people' for every string dependency provided in PeopleListComponent or its children.
+
+###### OpaqueToken
+_Creates a token that can be used in a DI Provider._
+
+Instead of injecting a primitive string (which the injector would use for all string dependencies) 
+an OpaqueToken is injected. This way the dependency is represented by a variable that can be
+given a string value.
+
+```javascript
+export const REST_URL: OpaqueToken = new OpaqueToken('rest url');
+//RestService
+constructor(private http: Http, @Inject(REST_URL) urlToken: OpaqueToken) {}
+```
+
+The @Inject() decorator tells the injector which OpaqueToken (REST_URL) should be injected into this service.
+
+Usually @Injectable() will suffice, but not in this case. @Injectable() resolves dependencies based on type and url's type is 
+OpaqueToken. We want to reference the unique custom OpaqueToken -> REST_URL.
+
+```
+In PeopleListComponent, provide REST_URL instead of the String.
+```
+
+The rest service dependencies are set.
+
+#### Implement
+```
+Change the dependency of PeopleListComponent from PeopleService to RestService (just the type).
+```
+```javascript
+constructor(private peopleService: RestService)
+```
+
+The application still works because of the old implementation of the methods.
+
+```
+Create a private string called url. In the contructor initialize the url
+with the Injected REST_URL.
+```
+
+```javascript
+this.url = urlToken.toString();
+```
+
+```
+Replace all hardecoded '/people' string with the url property.
+```
+
+The RestService dynamically retrieves Person from any given url. The RestService should also dynamically implement 
+return types and parameter types.
+
+#### Implementing dynamic types
+###### Switching typing sides
+```javascript
+get():Observable<Array<Person>>{
+    return this.http.get('/people')
+        .map(res => res.json());
 }
 ```
-![Webstorm component creation](https://blog.jetbrains.com/webstorm/files/2016/04/auto-import-ts.gif)
-Currently main.ts is trying to construct the root of the component tree by bootstrapping a component.
+get() is returning an Observable with a person Array. The RestService could return 
+any type of object depending on the provided url.
 ```
-Create a component named AppComponent (app.component.ts) and export its class.
-
-Click inside of the Component's decorator { } and hit ctrl+space
-to see the available properties.
-
-Give AppComponent a selector 'myApp' which will be linked to the
-<my-app>Loading...</my-app> tag inside index.html.
-
-Go back to main.ts and import AppComponent and bootstrap it like this:
-bootstrap(AppComponent, []);
+Change Array<Person> to Array<any>
 ```
-Not using Webstorm 2016.1 or just curious about the content of the component decorator?
-
-Checkout:
-
-[ComponentMetaData API](https://angular.io/docs/ts/latest/api/core/ComponentMetadata-class.html)
-
-### Assignment 2 Configure Component
-![Webstorm import autocompletion](https://blog.jetbrains.com/webstorm/files/2016/04/completion-for-imports.png)
+This fixes the issue of return types for RestService but now we lost the strong types on the other side (source that calls RestService).
+To fix this you have to type it on the other side.
 ```
-Inside the app.component.ts file there's an import to the Angular 2 core.
-Browse the Angular core by hitting ctrl+space as seen in the image above.
-
-Set the template of AppComponent to some random text (template is available
-inside the Component decorator).
+In PeopleListComponent, add a type to the person that gets passed by the
+success handler of the get observable.
 ```
-
-## Assignment 3 PeopleService
-#### Creating a service
-The root of the component tree is setup. Now we're going to implement the first branch about people.
-Inside the /app/people directory is a common folder that will be filled with shared classes among people.
-
-```
-Create a people.service.ts in the /app/people/common folder.
-Let people.service.ts export a class called PeopleService (services are not
-decorated like components are).
-```
-
-#### Injecting a plain service
 
 ```javascript
-bootstrap(AppComponent, [dep1, dep2]);
+people => {}
+//to
+(people:Array<Person>) => {}
 ```
 
-To expose this service to the injector, we have to _provide_ it (later more on _provide_).
-
-The Angular 1 approach would be to provide this service in the bootstrap 
-function, this way it becomes available for the whole application.
-
-In Angular 2 we can also choose to let only certain parts have access to certain dependencies.
+PeopleListComponent provides RestService an url so it also knows which
+types it can expect from the server.
 
 ```
-For now, add PeopleService as a dependency inside the bootstrap function.
+Rename the person parameter of create to 'params'.
+Set the appropriate types.
 ```
 
-#### Logging a service.
-The PeopleService is currently bootstrapped (injected at the root) so we can use it inside our AppComponent.
+update and delete have a thing in common, they only use the id property of an object.
+```
+Rename person -> params. Type = {id: numnber}
+```
+The type of params accepts only objects that have an id.
+
+### Component lifecycle.
+#### ViewChildren
+PeopleListComponent renders some PersonComponents in its view making them its ViewChildren.
+These ViewChildren can be retrieved in the PeopleListComponent class.
 
 ```
-Inject the PeopleService into the constructor of AppComponent and log the service.
+Add the following property to PeopleListComponent:
+@ViewChildren(PersonComponent) personComponents: QueryList<PersonComponent>;
 ```
 
-#### Adding a dependency to a service
+###### AfterViewInit:
+The PeopleListComponent can access its ViewChildren after the view is initialized.
 ```javascript
-class ExampleService {
-    constructor(private ExampleDep: ExampleDep) {}//ExampleDep gets injected
-}
-```
-
-Our people service doesn't do much at this point. We want it to communicate with our backend.
-To be able to use Http you have to inject it.
-
-```
-In main.ts import CUSTOM_HTTP_PROVIDERS from backend/index and add it as a
-dendency to the bootstrap function. 
-```
-
-###### Injecting Http
-Now Http is available to the injector and can be used everywhere.
-
-_Because of the Backend, a custom implementation of Http is required for this workshop. If you want real Http requests then HTTP_PROVDERS needs to be import from the Angular library.
-This is an example of how Angular's dependencies can be modified without breaking the application._
-
-```
-Inject Http into the PeopleService (Error occurs it's fine).
-```
-
-
-###### Exception!
-Now we run into a problem:
-```
-EXCEPTION: Cannot resolve all parameters for 'PeopleService'(?).
-Make sure that all the parameters are decorated with Inject or have 
-valid type annotations and that 'PeopleService' is decorated with 
-Injectable.
-```
-
-Just now we were fine when PeopleService didn't have any dependencies. 
-Now that we added one the injector complains about the fact that it doesn't know how to resolve the dependencies.
-We have to annotate our PeopleService so the injector knows that it has to inject dependencies based on their types.
-
-```
-Annotate PeopleService with @Injectable().
-Exceptions should be gone now.
-```
-The injector sees that PeopleService has a dependency of type Http.
-Http is provided in our bootstrap (CUSTOM_HTTP_PROVIDERS) so PeopleService injects that implementation
-of Http.
-
-#### Adding methods to PeopleService (Observables)
-This PeopleService will contain CRUD functionality for People.
-
-In Angular 2 Http requests return Observables (Rx.js) instead of Promises.
-```
-Create a get() method in PeopleService. We know that the server 
-will return an array of Person so let the return type of get() be an
-Array of Person wrapped in an Observable:
-Observable<Array<Person>>
-
-Inside the method: 
-return this.Http.get('people');
-```
-_Observable.subscribe() takes the same parameters as Promise.then(). Some of the differences between Observables and Promises are:_
-_- Observables are lazy loaded (not activated until subscribed)
-- Observables are cancelable (unsubscribe)_
-
-```javascript
-new Observable().subscribe(success, error, notify);//use lambda's (ES6 arrow functions)
-```
-
-#### Testing PeopleService
-```javascript
-service.get().subscribe(
-    res => console.log('Response: ' + res),
-    err => cosole.log(('Error: ' + err)
-);
-```
-
-```
-In AppComponent's constructor, subscribe to PeopleService's get method.
-```
-
-The body of the response contains an array of people but is still a JSON string.
-This is a problem because we defined that PeopleServic's get() method will return 
-an Observable<Array<Person>> and not an Observable<string>. The compiler thinks this
-is ok because the return observable receives the response on runtime, not compiltime.
-
-```
-Log plain JS in stead of a json string.
-res.json()
-```
-
-###### Rx.js
-
-To prevent the need of calling this json method every time we have to apply an operation on the Observable.
-The Rx.js library provides multiple operators for observables (kinda like stream operations). For this workshop only
-map will be used.
-
-```
-//Unlock the 'map' operator for Observables by pasting this import in main.ts
-import "rxjs/add/operator/map";
-
-In PeopleService, call .map on the http get request.
-return http.get().map(res => res.json())
-
-```
-Now AppComponent receives an array of people (inside an Observable) as promised.
-
-## Assignment 4 PeopleListComponent
-#### Creating PeopleListComponent
-To do something with the retrieved Person array we're going to move this functionality
-to a PeopleListComponent.
-```
-Create a new folder called 'people-list' inside /people and fill it with:
-people-list.html + people-list.ts
-
-Create a component called PeopleListComponent and export it.
-Configure the component so it is linked to its template and has a 
-selector called 'people-list'.
-```
-
-#### Routing to PeopleListComponent
-```javascript
-@RouteConfig([
-     {
-         path:'/example', component: ExampleComponent, name: 'Example', useAsDefault:true
-     }
-])
-```
-This people functionality should be separated from the rest of the application.
-Before we can use routing we have to import its providers.
-```
-Import ROUTER_PROVIDERS and add it as an dependency to the bootstrap function.
-
-The AppComponent will be the main route config.
-Decorate the AppComponent with a RouteConfig.
-path: '/people',
-name: 'PeopleList',
-component: PeopleListComponent
-```
-Just like in Angular 1 we need to define a viewport.
-In Angular 2 it's called router-outlet and is a component itself.
-```
-Provide AppComponent with ROUTER_DIRECTIVES by inserting it into the 
-directives array (inside component decorator). 
-```
-Now we can use router-outlet.
-```
-Set the template of AppComponent to '<router-outlet></router-outlet>'.
-```
-
-If everything is setup correctly, we should be able to use the /people route.
-Currently we're using the html5 mode routing. Imagine we want to use the Angular 1
-hashtag routing style.
-
-To override Angular or custom dependencies you'll have to implement the 
-provide function.
-
-```javascript
-//Example service
-export class ExampleService {
-    constructor(public MyDep: MyDep) { }
-}
-//Example component
-@Component({
-    /...
-    providers: [ExampleService, provide(MyDep, {
-       useClass: OtherDep
-    })];
-})
-class Cmp {
-    constructor(ExampleService: ExampleService) {
-        ExampleService.MyDep; // <- actually OtherDep
+export class PeopleListComponent implements AfterViewInit{ 
+    //...
+    ngAfterViewInit():void {
+        //Here
     }
 }
 ```
 
-Now we are going to provide a HashLocationStrategy to our bootstrap.
-This tells Angular to override the default routing behaviour.
+When accessed in ngAfterViewInit, the content of the QueryList will be empty.
+PeopleListComponent asynchronously calls the server which returns the list of people.
+This means that when the ngAfterViewInit gets called, the server response isn't in yet.
+
+```
+Implement AfterViewInit to access the personComps property and log it.
+```
+
+In the console should appear a QueryList with 0 _results.
+If you open the details of the object it magically contains results because it got filled after the server response arrived.
+To act upon this change of results QueryLists have a changes observable.
+
+```
+Subscribe to this.personComponents.changes with success parameter: (personCmps:QueryList<PersonComponent>) =>
+Call forEach on personCmps and console log each one of them.
+```
+
+From now on every time the personComponents length changes, every PersonComponent will be logged.
+
+#### Accessing a parent
+Imagine PersonComponent somehow has to directly access PeopleListComponent, which is not a good idea.
+
+To realize this a forward reference is needed.
+_forwardRef: Allows to refer to references which are not yet defined._
+```javascript
+constructor(@Inject(forwardRef(() => Dep)) private dep: Dep)
+```
+
+```
+In PersonComponent inject PeopleListComponent by using a forward referenced inject.
+Print PeopleListComponent's people.
+```
+
+### Component ng-content
+The behaviour of ng-content is similar to transclusion in Angular 1.
+```
+In common/header/header.component.html place <ng-content></ng-content> in the first block.
+Go to PeopleListComponent's template and place some text inside the <my-header> tag.
+Refresh the page.
+```
+
+The content of <my-header> gets copied inside the template of the header.
+This way we're able to mix templates.
+
+```
+Replace the content of <my-header> with a button saying 'left'.
+```
+
+This button is rendered by the header component but accessible by header's parent, PeopleListComponent.
+
+```
+Create a method called onLeftClick() inside PeopleListComponent and assign
+it to the button. Let it log something on click.
+```
+
+The right corner of the header also contains a suitable block for another button.
+Since ng-content renders all given html, we need to configure it.
+
+```
+In the header template add another <ng-content></ng-content> to the last block.
+Add the select attribuut to both ng-contents and assign them '.left' and '.right'.
+```
 
 ```javascript
-[..., ROUTER_PROVIDERS, provide(LocationStrategy, {
-    useClass: HashLocationStrategy
-})]
+<ng-content select=".className"></ng-content>
 ```
+_The select attribute is a css selector, so it goes way beyond class names._
 
-```
-Configure Angular's router to use # for routing instead of html5.
-Check if it works by going to /#/people (add some html to PeopleListComponent
-if you haven't already.
-```
-
-#### Prioritising dependencies
-A few assignments ago we've injected the PeopleService as a dependency to
-the bootstrap function (available for the whole application). Now it seems
-that we split functionality up by introducing the first people related
-component.
-```
-Remove the PeopleService from the bootstrap function and inject it to the
-providers array of the PeopleListComponent decorator (previous assignment
-example).
-```
-
-#### Defining properties
-The PeopleListComponents should have the following properties:
-```
-name            type                Visibility
-people          Array<Person>       public 
-PeopleService   PeopleService       private
-```
-Tip: constructor(private PeopleService: PeopleService) {}
-
-There are 2 possible locations for executing the Get request to retrieve people.
-The constructor that gets executed when the component is created.
-ngOnInit that gets executed after the component is done initializing.
-
-Since we are using TypeScript we have access to the (optional) feature
-of implementing an interface. This forces our component to implement certain
-methods and tells the developer what events are implemented.
-```
-Let PeopleListComponent implement OnInit.
-Just like importing, alt+enter should help you our defining unimplemented
-methods.
-
-Retrieve the people through the PeopleService and set the people property
-of PeopleListComponent. (don't use functions, use arrow functions!!)
-```
-
-Now we see safe types in action. Remember how the PeopleService get method
-returns an array of Person wrapped in a observable? Inside PeopleListComponent
-we subscribe to that observable and set it's response (which is Array<Person>)
-to its people property (also Array<Person>).
-
-Before setting PeopleListComponent's people property, auto completion 
-already works on the value passed through by the observable. TypeScript
-is aware of the observables value.
-
-#### Data-binding
-Now we've set our first real property of a component, let's use it inside
-our template.
+Now all content disappeared because we only handle elements with class names 'left' and 'right'.
 
 ```
-Implement Angular 2's equivalant to ng-repeat called *ngFor.
-Render the names of the people (give each person tag a 'row' class).
+Wrap the button in PersonListComponent template in a div with class name 'left'.
+Do the same for a new button called right.
 ```
 
-We want to be able to add someone to this list. Instead of the usual
-2-way bind (ng-model) we're going to create a local template variable (like #person in *ngFor).
+Now you should have a header with 2 buttons that are placed there by the PeopleListComponent (parent).
+Behaviour is added to the Header without the Header itself being aware of it (so no need to pass anything).
 
+### Directives
 ```
-Create an input field for firstName and give it the following attribute:
-#firstName
-Do the same for lastName.
-
+Create a new folder called directives and create a hoover-color.directive.ts
+Export a class called HooverColorDirective and decorate it with @Directive.
+Set the selector of the @Directive to '[hooverColor]'.
 ```
-Now we have 2 input fields that have a local template variable (meaning
-the component can't access it). To pass it through the component we'll
-need some sort of event.
+Now we've created an Angular 2 directive. To use this directive it has to be imported and provided in the directives array of a component.
+Then this directive gets called as soon as hooverColor is added to a Html tag. 
 
-```
-Create an addPerson method that expects a firstName and lastName
-(both parameters have the following type: HTMLInputElement).
-Make this method log its parameters.
+Now the directives doesn't do anything. The HooverColor directive should change the color of its element when hoovered over.
 
-Create a button that fires a (click) that calls addPerson with
-a firstName and lastName
-```
-As you may notice somehow we pass an actual HTML element to our component.
-The #property doesn't read the value of the html tag, but represents the 
-tag itself. This way you can use HTML elements without polluting your 
-viewmodel ($scope in Angular 1 terms).
-
-```
-Let addPerson log the value of each parameter.
-```
-
-We've now implemented our first data bind, event handler and local variable.
-These implementations work internally for the component. We haven't touched
-its public API yet (inputs and outputs).
-
-#### Creating a new Person
-```
-Add a create(person:Person) (post) method to the PeopleService. 
-Let the PeopleListComponent call the create method with a first and last
-name.
-
-On success the server will respond with a location header that holds the
-url of the newly created Person.
-
-Implement a getById(id:number) (in PeopleService) which calls /people/:id
-and make sure that the create method returns the new person.
-```
-
-Answer to POST assignment. Read through the method so you understand what's going on.
-We create our own observable that will succeed after 2 calls.
 ```javascript
-create(person:Person): Observable<Person> {
-    return new Observable(observer => {
-        this.Http.post('people', JSON.stringify(params)).subscribe(
-            res => {
-                let location = res.headers.get('location');
-                this.Http.get(location).map(res => res.json()).subscribe(
-                    person => observer.next(person),
-                    err => observer.error(err)
-                )
-            },
-            err => observer.error(err)
-        )
-    });
-}
-```
-
-## Assignment PersonComponent
-#### Creating PersonComponent
-We're going to create a Person component that contains a Person.
-This component can update the values of the person.
-
-```
-Create a new folder called person (in /people).
-Fill it with a person.component.ts and html (with some text).
-
-Inject the PersonComponent into the PeopleListComponent (inside the directives array).
-Now the person selector is available in the PeopleListComponent template.
-
-Render a person in the PeopleListComponent to see if it works.
-```
-#### Input
-```javascript
+@Directive({
+    //...
+    host: { 'eventName' : 'fnName()'}
+})
 class Example {
-    @Input() varIn: Type;
-}
-```
-The PersonComponent expects a person of type Person to be given by the parent.
-```
-Configure the PersonComponent so it expects a person of type Person.
-
-Implement OnInit and log the person property inside ngOnInit() {}
-```
-
-Now we're going to test the Input() property by passing a value to the person attribute.
-
-```
-Inside the PeopleListComponent's template, pass the first person retrieved from the 'backend'.
-<person person="person[0]"></person>
-
-The PersonComponent should now print: 'person[0]'.
-```
-
-This bind didn't work as expected. We expected to be a person and not a literal string.
-We have to tell Angular what type of binding is used by using different syntax in html.
-
-```
-Replace <person person="person[0]"></person>
-with    <person [person]="person[0]"></person>
-
-Check your log. It should now print the actual JS object.
-```
-
-#### Output
-```javascript
-class Example {
-    @Output() myEvent:EventEmitter = new EventEmitter();
-    
-    someFn():void {
-        let exampleParam = {test:'value'};
-        this.myEvent.emit(exampleParam);
+    fnName() {
+        //do something
     }
 }
 ```
-We don't want our PersonComponent to update the person on the backend,
-we just want to emit an event with the new values.
 ```
-Let PersonComponent Output() an update event.
-
-Go to the PeopleListComponent and create an updatePerson method that prints 
-1 parameter called person. Add this method to the update event of PersonComponent.
-<person [person]="person[0]" (update)="updatePerson($event)"></person>
+Add the host attribute to the Directive's config and implement mouseenter 
+and mouseout (log something).
 ```
-
-$event stands for the parameter we choose to emit inside PersonComponent.
-In a bit we're going to implement the actual update.
-```
-Create a button inside the PersonComponent template that calls a confirmUpdate
-method on click. Emit the update event in the PersonComponent confirmUpdate
-with its person as a parameter.
-```
-When clicking the button, PeopleListComponent's updatePerson function
-should print a person.
-
-Now we have a PersonComponent with a public api:
-
-In (properties): person of type Person.
-
-Out (events): update event that emits a person.
-
-#### Updating a person in PersonComponent
-```
-Implement the update (PUT) method of PeopleService.
-PUT only returns a status. So if there are no errors everything 
-worked out.
-```
-
-## Bonus
-```
-Implement a button in PeopleListComponent that deletes a person from the 
-server.
+Two events are handled but the directive doesn't have access to the actual element yet.
+To retrieve the element it is attached to, it has to be injected.
+```javascript
+private _el:HTMLElement;
+constructor(el: ElementRef) {
+    this._el = el.nativeElement;
+}
 ```
 
 ```
-Create a HomeComponent. Assign path '/' to the HomeComponent (routing).
-Import PeopleListComponent and add it to HomeComponent's directives array.
-Add <ng-content> somewhere in PeopleListComponent's template and 
-put some custom html in HomeComponent's template inside the <people-list>
-element.
+Configure the directive so it changes the color of the HTMLElement
+by setting its style.backgroundColor on mouseenter and resets it on mouseout.
 ```
 
-
-```
-Implement some more directives of the Angular 2 core.
-CHEATSHEET
-```
