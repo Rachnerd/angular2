@@ -69,20 +69,29 @@ Currently there's a PeopleService that contains rest functionality. The hardcode
 make this service not reusable. In this assignment we're going to explore 2 ways of making a reusable Rest service:
 
 - RestService: Configurable with provide().
-- GenericService: Used to create specific RestServices easily.
+- GenericRestService: Class that uses generics to dynamically return types.
 
+#### RestService
+The RestService assignment focuses on Angular's injector. You will have 
+to provide multiple dependencies to make the RestService work yourself.
 
-#### Copying functionality
-We're going to let the PeopleService like it is.
+##### Preparing RestService
 ```
 Copy the methods of PeopleService into /common/rest/rest.service.ts.
+
+Create a property in RestService called url of type string. Replace all
+hardcoded '/people' strings with this property.
+
+Replace all Person return types with any types.
+
+The update and delete parameters types should be {id: number}.
 ```
 
-#### Dependencies
-###### String
-Before we can implement the RestService correctly, we have to setup its
-dependencies. The ideal situation would be a RestService that depends on
-the Http service and an Url.
+We now have a service that doesn't have an url yet. 
+
+##### Dependency injection
+To set the url of the RestService we are going to provide a string to
+the injector, but first we have to create the url dependency for RestService.
 ```
 Inject besides Http a string called url.
 ```
@@ -95,9 +104,8 @@ constructor(private http:Http, private url:string)
 Add RestService to the providers: [] of PeopleListComponent and look at
 the red errors of death in the console.
 ```
-
-The injector complains because it has no string to pass to the url dependency of RestService.
-The url string has to be provided.
+Just like any other dependency so far, the url string dependency has to be provided
+somewhere to the injector.
 
 ```javscript
 //providing a String dependency
@@ -107,11 +115,51 @@ provide(String, {useValue: ''})
 ```
 Provide a String '/people' in PeopleListComponent's providers array.
 ```
+
 Now the injector passes the '/people' string into the RestService, meaning that we've set a
 property in a Service by using dependency injection.
 
-You might have noticed that this solution is terrible. Now the injector
+You might have noticed that this solution is terrible. The injector
 will provide '/people' for every string dependency provided in PeopleListComponent or its children.
+
+###### OpaqueToken
+_Creates a token that can be used in a DI Provider._
+
+To prevent providing a normal type like string, an OpaqueToken can be provided instead.
+OpaqueTokens are unique which means that dependencies of type OpaqueToken can still
+be distinguished by the injector, unlike strings.
+
+```
+Create an exported const names REST_URL like the example below.
+```
+
+```javascript
+export const REST_URL: OpaqueToken = new OpaqueToken('rest url');
+```
+
+```
+Add an urlToken dependency of type OpaqueToken to the RestService.
+Tell the injector that it has to be the REST_URL by using Inject().
+```
+
+```
+//RestService
+constructor(private http: Http, @Inject(REST_URL) urlToken: OpaqueToken) {
+    this.url = urlToken.toString();
+}
+```
+
+The @Inject(REST_URL) decorator tells the injector which OpaqueToken needs to be injected into this service.
+
+Usually @Injectable() will suffice, but not in this case. @Injectable() resolves dependencies based on type and url's type is 
+OpaqueToken. We want to reference the unique custom OpaqueToken -> REST_URL so we use Inject to specify.
+
+```
+In PeopleListComponent, provide REST_URL instead of the String.
+Everything should be working.
+```
+
+This RestService can be provided in multiple parts of the application with a different response
 
 #### Generics
 _Thanks to Wouter Oet_ 
