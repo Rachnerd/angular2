@@ -111,7 +111,7 @@ You might have noticed that this solution is terrible. Now the injector
 will provide '/people' for every string dependency provided in PeopleListComponent or its children.
 
 #### Generics
-_Thanks to Wouter Oet_
+_Thanks to Wouter Oet_ 
 Instead of injecting primitive strings, we're going to create a better solution using generic types.
 
 ```
