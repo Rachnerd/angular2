@@ -63,16 +63,19 @@ Take a look at the PeopleListComponent and read the comments.
 Take a look at the PersonComponent and read the comments.
 ```
 
-### Assignment 2 RestService
+### Assignment 2 Configurable services
 ###### Why this assignment?
-Currently there's a PeopleService that contains rest functionality. The url '/people' is what makes
-this Service very specific and not reusable. We're going to fix this by making a generic RestService that
-can be configured through dependency injection (provide).
+Currently there's a PeopleService that contains rest functionality. The hardcoded url '/people' and the return types of the methods
+make this service not reusable. In this assignment we're going to explore 2 ways of making a reusable Rest service:
+
+- RestService: Configurable with provide().
+- GenericService: Used to create specific RestServices easily.
+
 
 #### Copying functionality
 We're going to let the PeopleService like it is.
 ```
-Copy the methods of PeopleService into RestService.
+Copy the methods of PeopleService into /common/rest/rest.service.ts.
 ```
 
 #### Dependencies
