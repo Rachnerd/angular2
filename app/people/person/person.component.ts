@@ -22,7 +22,8 @@ export class PersonComponent implements OnInit{
     editMode:boolean = false;
 
     constructor(private peopleService: RestService, @Inject(forwardRef(() => PeopleListComponent)) private peopleListCmp: PeopleListComponent) {
-        console.log(this.peopleListCmp.people);}
+        // console.log(this.peopleListCmp.people);
+    }
 
     cancel():void {
         (<any>Object).assign(this.person, this.backup);

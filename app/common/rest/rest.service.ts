@@ -16,7 +16,7 @@ export const REST_URL: OpaqueToken = new OpaqueToken('rest url');
  */
 @Injectable()
 export class RestService {
-    public path:string;
+    private path:string;
 
     /**
      * Constructor.

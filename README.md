@@ -64,8 +64,8 @@ Take a look at the PersonComponent and read the comments.
 ```
 
 ### Assignment 2 Configurable services
-###### Why this assignment?
-Currently there's a PeopleService that contains rest functionality. The hardcoded url '/people' and the return types of the methods
+###### Introduction
+Currently there's a PeopleService that contains rest functionality. The hardcoded url '/people' together with the types of the methods
 make this service not reusable. In this assignment we're going to explore 2 ways of making a reusable Rest service:
 
 - RestService: Configurable with provide().
@@ -73,7 +73,7 @@ make this service not reusable. In this assignment we're going to explore 2 ways
 
 #### RestService
 The RestService assignment focuses on Angular's injector. You will have 
-to provide multiple dependencies to make the RestService work yourself.
+to provide dependencies to make the RestService work.
 
 ##### Preparing RestService
 ```
@@ -114,6 +114,8 @@ provide(String, {useValue: ''})
 
 ```
 Provide a String '/people' in PeopleListComponent's providers array.
+
+Inject it into PeopleListComponent and call get.
 ```
 
 Now the injector passes the '/people' string into the RestService, meaning that we've set a
@@ -159,52 +161,50 @@ In PeopleListComponent, provide REST_URL instead of the String.
 Everything should be working.
 ```
 
-This RestService can be provided in multiple parts of the application with a different response
+This RestService can be provided in multiple parts of the application with different rest urls.
 
 #### Generics
 _Thanks to Wouter Oet_ 
-Instead of injecting primitive strings, we're going to create a better solution using generic types.
+Instead of injecting strings, we're going to create a better solution using generic types.
 
 ```
-Copy PeopleService's content to the GenericService.
+Copy RestService's content to the GenericRestService (don't copy the OpaqueToken).
+
 ```
-In contrary to PeopleService, the GenericService will not be used directly in our code.
+Unlike RestService, the GenericService will not be used in the code directly.
 We have to create different services that extend this GenericService, but first we
-have to make GenericService ready for proper inheritance.
+have to make GenericRestService ready for proper inheritance.
 
 ```
-Let the GenericService accept a type T
+Add the generic type T to the GenericRestService class.
 ```
 
 ```javascript
 class Service<T> {}
 ```
 
-This T is important because it will serve as all return types later on.
+This T is important because it will serve as all method types later on.
 
 ```
 Refactor all Person return types to T.
 ```
 
-What we've done is specifying that GenericService returns objects from the server of type T .
-Type T will be determined by the service that will inherit the GenericService.
+We've specified that GenericService returns objects from the server of type T.
+Type T will be determined by the service that will inherit the GenericRestService.
 
-Next we want to get rid of all the hardcoded '/people' strings, but first we have to fix GenericService's
-dependencies.
+GenericRestService will serve like a superclass so we are never going to use it by itself.
+This means that the string can be provided the normal way (without injection).
 
 ```
-Inject Http and a string called url.
-Remove the @Injectable() decorator (if necessary).
-Use the Inject() decorator to inject Http and let the url string for 
-what it is (so no injecting).
+Use the Inject() decorator to inject Http into the service.
+Add an url string parameter to the constructor.
 ```
 
 ```
-constructor(@Inject(Dep) private dep : Dep) {}
+constructor(@Inject(Dep) private dep : Dep, foo:string) {}
 ```
 
-This setup isn't configured for the Angular injector because the injector can never
-provide a string url (because it's not decorated with either Inject() or Injectable()).
+Now the GenericRestService is ready to be extended.
 
 ```
 Empty PeopleService (except for its constructor) and let it extend 
@@ -240,95 +240,6 @@ with correct return types.
 Log PeopleService and check the console.
 ```
 
-<!--###### OpaqueToken-->
-<!--_Creates a token that can be used in a DI Provider._-->
-
-<!--Instead of injecting a primitive string (which the injector would use for all string dependencies) -->
-<!--an OpaqueToken is injected. This way the dependency is represented by a variable that can be-->
-<!--given a string value.-->
-
-<!--```javascript-->
-<!--export const REST_URL: OpaqueToken = new OpaqueToken('rest url');-->
-<!--//RestService-->
-<!--constructor(private http: Http, @Inject(REST_URL) urlToken: OpaqueToken) {}-->
-<!--```-->
-
-<!--The @Inject() decorator tells the injector which OpaqueToken (REST_URL) should be injected into this service.-->
-
-<!--Usually @Injectable() will suffice, but not in this case. @Injectable() resolves dependencies based on type and url's type is -->
-<!--OpaqueToken. We want to reference the unique custom OpaqueToken -> REST_URL.-->
-
-<!--```-->
-<!--In PeopleListComponent, provide REST_URL instead of the String.-->
-<!--```-->
-
-<!--The rest service dependencies are set.-->
-
-#### Implement
-```
-Change the dependency of PeopleListComponent from PeopleService to RestService (just the type).
-```
-```javascript
-constructor(private peopleService: RestService)
-```
-
-The application still works because of the old implementation of the methods.
-
-```
-Create a private string called url. In the contructor initialize the url
-with the Injected REST_URL.
-```
-
-```javascript
-this.url = urlToken.toString();
-```
-
-```
-Replace all hardecoded '/people' string with the url property.
-```
-
-The RestService dynamically retrieves Person from any given url. The RestService should also dynamically implement 
-return types and parameter types.
-
-#### Implementing dynamic types
-###### Switching typing sides
-```javascript
-get():Observable<Array<Person>>{
-    return this.http.get('/people')
-        .map(res => res.json());
-}
-```
-get() is returning an Observable with a person Array. The RestService could return 
-any type of object depending on the provided url.
-```
-Change Array<Person> to Array<any>
-```
-This fixes the issue of return types for RestService but now we lost the strong types on the other side (source that calls RestService).
-To fix this you have to type it on the other side.
-```
-In PeopleListComponent, add a type to the person that gets passed by the
-success handler of the get observable.
-```
-
-```javascript
-people => {}
-//to
-(people:Array<Person>) => {}
-```
-
-PeopleListComponent provides RestService an url so it also knows which
-types it can expect from the server.
-
-```
-Rename the person parameter of create to 'params'.
-Set the appropriate types.
-```
-
-update and delete have a thing in common, they only use the id property of an object.
-```
-Rename person -> params. Type = {id: numnber}
-```
-The type of params accepts only objects that have an id.
 
 ### Component lifecycle.
 #### ViewChildren
@@ -341,7 +252,7 @@ Add the following property to PeopleListComponent:
 ```
 
 ###### AfterViewInit:
-The PeopleListComponent can access its ViewChildren after the view is initialized.
+The PeopleListComponent can access its ViewChildren after the view initialized.
 ```javascript
 export class PeopleListComponent implements AfterViewInit{ 
     //...
@@ -368,7 +279,7 @@ Subscribe to this.personComponents.changes with success parameter: (personCmps:Q
 Call forEach on personCmps and console log each one of them.
 ```
 
-From now on every time the personComponents length changes, every PersonComponent will be logged.
+From now on, every time the personComponents length changes every available PersonComponent will be logged.
 
 #### Accessing a parent
 Imagine PersonComponent somehow has to directly access PeopleListComponent, which is not a good idea.

@@ -4,9 +4,11 @@ import {REST_URL, RestService} from "../rest/rest.service";
     selector: 'my-header',
     templateUrl: './app/common/header/header.component.html',
     styleUrls: ['./app/common/header/header.component.css'],
-    providers: [RestService, provide(REST_URL, {useValue: '/foo'})]
+    providers: [RestService] //provide(REST_URL, {useValue: '/foo'})
 })
 export class HeaderComponent {
     @Input() title:string;
-    constructor() {}
+    constructor(restService: RestService) {
+        console.log(restService);
+    }
 }

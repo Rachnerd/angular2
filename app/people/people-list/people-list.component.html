@@ -1,13 +1,10 @@
 <my-header title="List of people">
-    <!--<div class="left">-->
-        <!--<button>Left</button>-->
-    <!--</div>-->
-    <!--<div class="right">-->
-        <!--<button>Right</button>-->
-        <!--<div test>-->
-        <!--</div>-->
-    <!--</div>-->
-    Adasdasd
+    <div class="left" hooverColor>
+        <button>Left</button>
+    </div>
+    <div class="right">
+        <button>Right</button>
+    </div>
 </my-header>
 <div id="peopleList">
     <p *ngFor="#person of people;#i = index;">
@@ -20,6 +17,6 @@
         <p class="error">{{errorMessage}}</p>
     </form>
 </div>
-<div hooverColor>
+<div>
     {{ 2 |  exponentialStrength:10}}
 </div>

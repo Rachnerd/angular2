@@ -9,6 +9,7 @@ import {PEOPLE_CONFIG} from "../common/config";
 import {RestService, REST_URL} from "../../common/rest/rest.service";
 import {HeaderComponent} from "../../common/header/header.component";
 import {HooverColorDirective} from "../../directives/hoover.directive";
+import {GenericService} from "../../common/rest/generic.service";
 
 @Pipe({name: 'exponentialStrength'})
 export class ExponentialStrengthPipe implements PipeTransform {
@@ -44,7 +45,7 @@ export class ExponentialStrengthPipe implements PipeTransform {
     templateUrl: `${PEOPLE_CONFIG.FOLDER}/people-list/people-list.component.html`,
     styleUrls: [`${PEOPLE_CONFIG.FOLDER}/people-list/people-list.component.css`],
     directives: [PersonComponent, HeaderComponent, HooverColorDirective],
-    providers: [PeopleService, RestService, provide(REST_URL, { useValue: '/people'})],
+    providers: [PeopleService, RestService, provide(REST_URL, { useValue: '/people'}), provide(String, {useValue: '/people'})],
     pipes:[ExponentialStrengthPipe]
 })
 export class PeopleListComponent implements AfterViewInit{
@@ -53,19 +54,19 @@ export class PeopleListComponent implements AfterViewInit{
     public errorMessage:string;
     @ViewChildren(PersonComponent) personComponents: QueryList<PersonComponent>;
 
-    constructor(private restService: RestService) {
-        // peopleService.get()
-        //     .subscribe(
-        //         people => {
-        //             this.people = people;
-        //         },
-        //         error => console.log(error)
-        //     );
-        this.restService.get()
+    constructor(private restService: PeopleService, genericService: GenericService) {
+        restService.get()
             .subscribe(
-                (people:Array<Person>) => this.people = people,
+                people => {
+                    this.people = people;
+                },
                 error => console.log(error)
             );
+        // this.restService.get()
+        //     .subscribe(
+        //         (people:Array<Person>) => this.people = people,
+        //         error => console.log(error)
+        //     );
     }
     addPerson(firstNameInput :HTMLInputElement, lastNameInput:HTMLInputElement):void {
         let firstName = firstNameInput.value;
@@ -91,16 +92,17 @@ export class PeopleListComponent implements AfterViewInit{
                 error => this.errorMessage = `${error.status} ${error.statusText}`
             );
     }
-
+    test (message:string) {
+        console.log(message);
+    }
     /**
      * Assignment
      */
     ngAfterViewInit():void {
-        console.log(this.personComponents);
         this.personComponents.changes
             .subscribe((personCmps:QueryList<PersonComponent>) => {
                 personCmps.forEach((cmp: PersonComponent) => {
-                    console.log(cmp.person);
+                    //console.log(cmp.person);
                 })
             })
     }
