@@ -1,8 +1,7 @@
 import {Component, Input, Output, OnInit, EventEmitter} from "angular2/core";
-import {Person, LocalPerson} from "../common/person.model";
+import {Person} from "../common/person.model";
 import {PEOPLE_CONFIG} from "../common/config";
 import {PeopleService} from "../common/people.service";
-
 
 @Component({
     selector: 'person',
@@ -16,10 +15,11 @@ export class PersonComponent implements OnInit{
     @Output() update: EventEmitter<Person> = new EventEmitter();
     @Output() delete: EventEmitter<Person> = new EventEmitter();
 
-    backup: LocalPerson = { firstName: '', lastName: '' };
+    backup: Person = <any>{};
     editMode:boolean = false;
 
-    constructor(private peopleService: PeopleService) {}
+    constructor(private peopleService: PeopleService) {
+    }
 
     cancel():void {
         (<any>Object).assign(this.person, this.backup);
@@ -36,7 +36,6 @@ export class PersonComponent implements OnInit{
 
     edit():void {
         this.editMode = true;
-
     }
     hasChanged():boolean {
         return this.person.firstName != this.backup.firstName || this.person.lastName != this.backup.lastName;
@@ -52,18 +51,14 @@ export class PersonComponent implements OnInit{
     }
 
     save():void {
-        if(this.hasChanged()) {
-            this.peopleService.update(this.person)
-                .subscribe(
-                    res => {
-                        (<any>Object).assign(this.backup, this.person);
-                        this.editMode = false;
-                        this.update.emit(this.person);
-                    },
-                    err => console.log(err)
-                )
-        }else {
-            this.editMode = false;
-        }
+        this.peopleService.update(this.person)
+            .subscribe(
+                res => {
+                    (<any>Object).assign(this.backup, this.person);
+                    this.editMode = false;
+                    this.update.emit(this.person);
+                },
+                err => console.log(err)
+            )
     }
 }
