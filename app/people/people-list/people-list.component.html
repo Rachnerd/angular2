@@ -1,10 +1,4 @@
 <my-header title="List of people">
-    <div class="left" hooverColor>
-        <button>Left</button>
-    </div>
-    <div class="right">
-        <button>Right</button>
-    </div>
 </my-header>
 <div id="peopleList">
     <p *ngFor="#person of people;#i = index;">
@@ -16,7 +10,4 @@
         <button type="submit">Submit</button>
         <p class="error">{{errorMessage}}</p>
     </form>
-</div>
-<div>
-    {{ 2 |  exponentialStrength:10}}
 </div>

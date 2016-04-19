@@ -16,33 +16,5 @@ import {RouteConfig, RouterOutlet} from "angular2/router";
     }
 ])
 export class AppComponent {
-    /**
-     *  The PeopleService is not available anymore because it gets provided
-     *  in PeopleListComponent, which is a child of AppComponent.
-     *  This is why the content of the constructor is removed (in comments).
-     */
-    constructor() {//peopleService: PeopleService
-        // peopleService.get().subscribe(
-        //     people => console.log(people),
-        //     error => console.log(error)
-        // );
-        // peopleService.create({firstName: 'Hello', lastName: 'World'}).subscribe(
-        //     person => {
-        //         person.firstName = '123';
-        //
-        //     },
-        //     error => console.log(error)
-        // );
-        // peopleService.delete({id: 1, firstName: '123', lastName: '321'}).subscribe(
-        //     () => {
-        //         console.log('Updated');
-        //         peopleService.get().subscribe(
-        //             people => console.log(people),
-        //             error => console.log(error)
-        //         );
-        //     },
-        //     error => console.log(error)
-        // )
-        //
-    }
+    constructor() {}
 }

@@ -1,9 +1,7 @@
-import {Component, Input, Output, OnInit, EventEmitter, Host, forwardRef, Inject} from "angular2/core";
+import {Component, Input, Output, OnInit, EventEmitter} from "angular2/core";
 import {Person, LocalPerson} from "../common/person.model";
 import {PEOPLE_CONFIG} from "../common/config";
 import {PeopleService} from "../common/people.service";
-import {PeopleListComponent} from "../people-list/people-list.component";
-import {RestService} from "../../common/rest/rest.service";
 
 
 @Component({
@@ -21,9 +19,7 @@ export class PersonComponent implements OnInit{
     backup: LocalPerson = { firstName: '', lastName: '' };
     editMode:boolean = false;
 
-    constructor(private peopleService: RestService, @Inject(forwardRef(() => PeopleListComponent)) private peopleListCmp: PeopleListComponent) {
-        // console.log(this.peopleListCmp.people);
-    }
+    constructor(private peopleService: PeopleService) {}
 
     cancel():void {
         (<any>Object).assign(this.person, this.backup);
