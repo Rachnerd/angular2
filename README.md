@@ -32,7 +32,7 @@ Core library.
 [API](https://angular.io/docs/ts/latest/api/)  +  [Cheatsheet](https://angular.io/cheatsheet) <- Open both!!
 
 ## Backend
-At some point in this workshop Http gets implemented. In stead of using the Http from the Angular API, a customized Http class
+In stead of using the Http from the Angular API, a customized Http class
 is used that is configured to call a static (fake) backend. The following requests will be available in this workshop:
 ```
 Request                     Response  
@@ -65,7 +65,7 @@ Take a look at the PersonComponent and read the comments.
 
 ### Assignment 2 RestService
 ###### Why this assignment?
-Currently there's a PeopleService that contains rest functionality. The url /people is what makes
+Currently there's a PeopleService that contains rest functionality. The url '/people' is what makes
 this Service very specific and not reusable. We're going to fix this by making a generic RestService that
 can be configured through dependency injection (provide).
 
@@ -110,29 +110,108 @@ property in a Service by using dependency injection.
 You might have noticed that this solution is terrible. Now the injector
 will provide '/people' for every string dependency provided in PeopleListComponent or its children.
 
-###### OpaqueToken
-_Creates a token that can be used in a DI Provider._
+#### Generics
+_Thanks to Wouter Oet_
+Instead of injecting primitive strings, we're going to create a better solution using generic types.
 
-Instead of injecting a primitive string (which the injector would use for all string dependencies) 
-an OpaqueToken is injected. This way the dependency is represented by a variable that can be
-given a string value.
+```
+Copy PeopleService's content to the GenericService.
+```
+In contrary to PeopleService, the GenericService will not be used directly in our code.
+We have to create different services that extend this GenericService, but first we
+have to make GenericService ready for proper inheritance.
+
+```
+Let the GenericService accept a type T
+```
 
 ```javascript
-export const REST_URL: OpaqueToken = new OpaqueToken('rest url');
-//RestService
-constructor(private http: Http, @Inject(REST_URL) urlToken: OpaqueToken) {}
+class Service<T> {}
 ```
 
-The @Inject() decorator tells the injector which OpaqueToken (REST_URL) should be injected into this service.
-
-Usually @Injectable() will suffice, but not in this case. @Injectable() resolves dependencies based on type and url's type is 
-OpaqueToken. We want to reference the unique custom OpaqueToken -> REST_URL.
+This T is important because it will serve as all return types later on.
 
 ```
-In PeopleListComponent, provide REST_URL instead of the String.
+Refactor all Person return types to T.
 ```
 
-The rest service dependencies are set.
+What we've done is specifying that GenericService returns objects from the server of type T .
+Type T will be determined by the service that will inherit the GenericService.
+
+Next we want to get rid of all the hardcoded '/people' strings, but first we have to fix GenericService's
+dependencies.
+
+```
+Inject Http and a string called url.
+Remove the @Injectable() decorator (if necessary).
+Use the Inject() decorator to inject Http and let the url string for 
+what it is (so no injecting).
+```
+
+```
+constructor(@Inject(Dep) private dep : Dep) {}
+```
+
+This setup isn't configured for the Angular injector because the injector can never
+provide a string url (because it's not decorated with either Inject() or Injectable()).
+
+```
+Empty PeopleService (except for its constructor) and let it extend 
+GenericService with type Person.
+```
+
+```javascript
+class Child extends Parent<Type> {}
+```
+
+When extending a parent with constructor parameters, it is necessary to
+call super with those parameters.
+
+```
+Let PeopleService call super with http and '/people'.
+```
+
+```javascript
+class Parent {
+    constructor(dep: Dep, foo: number) {}
+}
+class Child extends Parent {
+    constructor(dep: Dep) {
+        super(dep, 1);
+    }
+}
+```
+
+Now PeopleService inherits the Rest functionality of the GenericService
+with correct return types.
+
+```
+Log PeopleService and check the console.
+```
+
+<!--###### OpaqueToken-->
+<!--_Creates a token that can be used in a DI Provider._-->
+
+<!--Instead of injecting a primitive string (which the injector would use for all string dependencies) -->
+<!--an OpaqueToken is injected. This way the dependency is represented by a variable that can be-->
+<!--given a string value.-->
+
+<!--```javascript-->
+<!--export const REST_URL: OpaqueToken = new OpaqueToken('rest url');-->
+<!--//RestService-->
+<!--constructor(private http: Http, @Inject(REST_URL) urlToken: OpaqueToken) {}-->
+<!--```-->
+
+<!--The @Inject() decorator tells the injector which OpaqueToken (REST_URL) should be injected into this service.-->
+
+<!--Usually @Injectable() will suffice, but not in this case. @Injectable() resolves dependencies based on type and url's type is -->
+<!--OpaqueToken. We want to reference the unique custom OpaqueToken -> REST_URL.-->
+
+<!--```-->
+<!--In PeopleListComponent, provide REST_URL instead of the String.-->
+<!--```-->
+
+<!--The rest service dependencies are set.-->
 
 #### Implement
 ```
@@ -300,6 +379,8 @@ Now you should have a header with 2 buttons that are placed there by the PeopleL
 Behaviour is added to the Header without the Header itself being aware of it (so no need to pass anything).
 
 ### Directives
+For this assignment a basic Html altering directive will be created.
+
 ```
 Create a new folder called directives and create a hoover-color.directive.ts
 Export a class called HooverColorDirective and decorate it with @Directive.
@@ -339,3 +420,87 @@ Configure the directive so it changes the color of the HTMLElement
 by setting its style.backgroundColor on mouseenter and resets it on mouseout.
 ```
 
+Just like components, directives have in and outputs. This means that besides
+Html manipulation and native event handling, directives can also receive input
+and output custom events. (all defined in the parent HTMLElement of the directive).
+
+```
+Create an Input string that can determine the color.
+Test it out by setting the attribute in html
+```
+
+```javascript
+this._el.style.backgroundColor = this.color || 'black';
+```
+
+### Dependency injection example scenario
+This assignment is purely to illustrate how nested components deal with
+dependency injection, it has no practical use.
+
+```
+Create a TestService and give it a dependency of type string.
+```
+
+This works because we've provided the RestService in the PeopleListComponent
+which is the owner of the template HeaderComponent is in.
+
+```
+Provide RestService in HeaderComponent and provide a different url ('/foo').
+```
+
+Now we have 2 instances of RestService.
+PeopleListComponent -> '/people'
+HeaderComponent -> '/foo'
+
+In this case PeopleListComponent is the top level injector and HeaderComponent
+is the first child injector. Since HeaderComponent is inside of PeopleListComponent's
+view, it is a direct child and not a indirect child. Let's see how an implementation
+of an indirect child looks like.
+
+```
+Add the hooverColor attribute to the left button inside the header 
+(in PeopleListComponent).
+```
+
+The hooverColor directive currently is the direct child of the PeopleListComponent
+(because it exists inside that template) but and indirect child of HeaderComponent
+(because it gets nested inside the HeaderComponent HTMLElement and put in ng-content).
+
+```
+Inject the RestService into the hooverColor directive and log it (make sure 
+the only hooverColor directive is declared inside the Header HTMLElement)
+Don't provide the service inside the HooverColorDirective!
+```
+
+You should see a RestService in the console with url: '/foo'. HooverColorDirective
+injects RestService so it will search its parents for a provided RestService.
+HeaderComponent is the nearest parent for HooverColorComponent.
+
+The relations between the components and directive are as follows:
+
+PeopleListComponent children (direct):
+- HeaderComponent
+- HooverColorDirective
+
+HeaderComponent child (indirect):
+- HooverColorDirective
+
+Imagine that we want HeaderComponent to have a different implementation of
+RestService without overriding PeopleListComponent's RestService. This is possible
+by providing the RestService in the viewProviders of HeaderComponent.
+
+```
+Change the providers array of HeaderComponent to viewProviders and
+check the log for the output of HooverColorDirective.
+```
+
+You should now see a RestService that contains a '/people' url.
+
+PeopleListComponent ('/people') -> HeaderComponent ('/foo') -> HooverColorDirective ('/people').
+
+HooverColorDirective injects a RestService. It's not provided so it'll check its parent HeaderComponent.
+HeaderComponent only provides the RestService to its own view. HooverColorDirective now has to
+check the next parent which is PeopleListComponent. PeopleListComponent provides the RestService the
+normal way so HooverColorDirective can use that dependency.
+
+!!Mind that this works the same with nested components, this example happens to use a directive.
