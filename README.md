@@ -164,15 +164,15 @@ Everything should be working.
 This RestService can be provided in multiple parts of the application with different rest urls.
 
 #### Generics
-_Thanks to Wouter Oet_ 
+_Thanks to Wouter Oet_
+
 Instead of injecting strings, we're going to create a better solution using generic types.
 
 ```
 Copy RestService's content to the GenericRestService (don't copy the OpaqueToken).
-
 ```
-Unlike RestService, the GenericService will not be used in the code directly.
-We have to create different services that extend this GenericService, but first we
+Unlike RestService, the GenericService does not have to be used in the code directly.
+We can create different services that extend this GenericService, but first we
 have to make GenericRestService ready for proper inheritance.
 
 ```
@@ -191,6 +191,8 @@ Refactor all Person return types to T.
 
 We've specified that GenericService returns objects from the server of type T.
 Type T will be determined by the service that will inherit the GenericRestService.
+
+###### Inheritance
 
 GenericRestService will serve like a superclass so we are never going to use it by itself.
 This means that the string can be provided the normal way (without injection).
@@ -239,9 +241,28 @@ with correct return types.
 ```
 Log PeopleService and check the console.
 ```
+###### Provide useFactory.
+It is still possible to use GenericRestService in the injector by using useFactory.
 
+```
+Provide GenericRestService and implements useFactory.
+Take a look in backend/index at how Http gets provided using useFactory.
+The only dependency it has to pass on is Http, the url can be filled in 
+hardcoded. Don't forget to assign type Person to the new service.
+```
 
-### Component lifecycle.
+```javascript
+provide(Service, {
+    useFactory: (dep) => {
+        return new Service<Type>(dep, 'some value');
+    }, deps: [Http]
+});
+```
+
+When injecting this provided service into a class, you have to specify the Type 
+in the constructor parameter declaration as well.
+
+### Assignment 3 Component lifecycle.
 #### ViewChildren
 PeopleListComponent renders some PersonComponents in its view making them its ViewChildren.
 These ViewChildren can be retrieved in the PeopleListComponent class.
@@ -251,8 +272,10 @@ Add the following property to PeopleListComponent:
 @ViewChildren(PersonComponent) personComponents: QueryList<PersonComponent>;
 ```
 
+This tells the PeopleListComponent to keep track of its children of type PersonComponent.
+
 ###### AfterViewInit:
-The PeopleListComponent can access its ViewChildren after the view initialized.
+The PeopleListComponent can access the QUeryList after the view initialized.
 ```javascript
 export class PeopleListComponent implements AfterViewInit{ 
     //...
@@ -295,7 +318,7 @@ In PersonComponent inject PeopleListComponent by using a forward referenced inje
 Print PeopleListComponent's people.
 ```
 
-### Component ng-content
+#### Component ng-content
 The behaviour of ng-content is similar to transclusion in Angular 1.
 ```
 In common/header/header.component.html place <ng-content></ng-content> in the first block.
@@ -340,7 +363,7 @@ Do the same for a new button called right.
 Now you should have a header with 2 buttons that are placed there by the PeopleListComponent (parent).
 Behaviour is added to the Header without the Header itself being aware of it (so no need to pass anything).
 
-### Directives
+#### Directives
 For this assignment a basic Html altering directive will be created.
 
 ```
@@ -356,7 +379,7 @@ Now the directives doesn't do anything. The HooverColor directive should change 
 ```javascript
 @Directive({
     //...
-    host: { 'eventName' : 'fnName()'}
+    host: { '(eventName)' : 'fnName()'}
 })
 class Example {
     fnName() {
