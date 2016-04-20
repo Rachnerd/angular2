@@ -245,7 +245,7 @@ Log PeopleService and check the console.
 It is still possible to use GenericRestService in the injector by using useFactory.
 
 ```
-Provide GenericRestService and implements useFactory.
+Provide GenericRestService and implement useFactory.
 Take a look in backend/index at how Http gets provided using useFactory.
 The only dependency it has to pass on is Http, the url can be filled in 
 hardcoded. Don't forget to assign type Person to the new service.
@@ -262,7 +262,7 @@ provide(Service, {
 When injecting this provided service into a class, you have to specify the Type 
 in the constructor parameter declaration as well.
 
-### Assignment 3 Component lifecycle.
+### Assignment 3 Advanced Components
 For a full overview of Lifecycle hook checkc out the [docs](https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html).
 During the first workshop you've encountered the first lifecycle hook, OnInit (ngOnInit).
 In this assignment we're going to setup some communication between components.
@@ -383,10 +383,14 @@ Export a class called HooverColorDirective and decorate it with @Directive.
 Set the selector of the @Directive to '[hooverColor]'.
 ```
 Now we've created an Angular 2 directive. To use this directive it has to be imported and provided in the directives array of a component.
-Then this directive gets called as soon as hooverColor is added to a Html tag. 
+Then this directive gets called as soon as 'hooverColor' is added to a Html tag (no brackets). 
 
 Now the directives doesn't do anything. The HooverColor directive should change the color of its element when hoovered over.
 
+```
+Add the host attribute to the Directive's config and implement mouseenter 
+and mouseout (log something).
+```
 ```javascript
 @Directive({
     //...
@@ -397,10 +401,6 @@ class Example {
         //do something when 'eventName' is triggered
     }
 }
-```
-```
-Add the host attribute to the Directive's config and implement mouseenter 
-and mouseout (log something).
 ```
 Two events are handled but the directive doesn't have access to the actual element yet.
 To retrieve the element it is attached to, it has to be injected.
@@ -594,3 +594,5 @@ Now PersonComponent creates a shadow DOM that is completely isolated.
 This component will not be affected by any styling except for its own.
 You can see this because PersonComponent's buttons lost its round edges
 that are defined in styles.css.
+
+### Bonus

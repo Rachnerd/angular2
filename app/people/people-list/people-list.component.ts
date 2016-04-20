@@ -22,6 +22,7 @@ export class PeopleListComponent {
             .subscribe(
                 people => {
                     this.people = people;
+                    console.log('PeopleListComponent: ', people, 'have been retrieved!');
                 },
                 error => console.log(error)
             );
@@ -33,6 +34,7 @@ export class PeopleListComponent {
         this.peopleService.create({firstName, lastName}).subscribe(
             person => {
                 this.people.push(person);
+                console.log('PeopleListComponent: ', person, 'has been created!');
                 firstNameInput.value = '';
                 lastNameInput.value = '';
                 this.errorMessage = '';
@@ -41,11 +43,11 @@ export class PeopleListComponent {
         )
     }
     onDelete(person: Person, index: number) : void {
-        console.log('PeopleListComponent: ', person.firstName, 'has been deleted!');
+        console.log('PeopleListComponent: ', person, 'has been deleted!');
         this.people.splice(index, 1);
     }
     onUpdate(person: Person, index: number) : void {
-        console.log('PeopleListComponent: ', person.firstName, 'has been updated!');
+        console.log('PeopleListComponent: ', person, 'has been updated!');
     }
 }
 
