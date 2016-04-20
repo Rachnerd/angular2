@@ -12,8 +12,8 @@ import {PeopleService} from "../common/people.service";
 export class PersonComponent implements OnInit{
 
     @Input() person: Person;
-    @Output() update: EventEmitter<Person> = new EventEmitter();
     @Output() delete: EventEmitter<Person> = new EventEmitter();
+    @Output() update: EventEmitter<Person> = new EventEmitter();
 
     backup: Person = <any>{};
     editMode:boolean = false;
