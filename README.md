@@ -127,6 +127,14 @@ will provide '/people' for every string dependency provided in PeopleListCompone
 
 ###### OpaqueToken
 _Creates a token that can be used in a DI Provider._
+```javascript
+//underwater
+var t = new OpaqueToken("value");
+var injector = Injector.resolveAndCreate([
+  provide(t, {useValue: "bindingValue"})
+]);
+expect(injector.get(t)).toEqual("bindingValue");
+```
 
 To prevent providing a normal type like string, an OpaqueToken can be provided instead.
 OpaqueTokens are unique which means that dependencies of type OpaqueToken can still
@@ -614,4 +622,4 @@ Implement other Component lifecycle hooks.
 ```
 Take a look at observable change detection.
 ```
-[Pascal Precht Change Detection NgNL2016](http://pascalprecht.github.io/slides/angular-2-change-detection-explained/#/1)
+[Pascal Precht Change Detection NgNL2016](http://pascalprecht.github.io/slides/angular-2-change-detection-explained/#/2)
