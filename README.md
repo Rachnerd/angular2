@@ -1,7 +1,7 @@
 # Angular2Workshop
 ###Quintor
 #####Rachèl Heimbach
-This workshop introduces its participants to components, dependency injection and data-binding.
+This second part of the workshop focuses on Dependency Injection, Reuable code and Advanced Components. 
 
 A great source to help out with the Angular syntax is this [cheat sheet](https://angular.io/cheatsheet).
 
@@ -55,12 +55,12 @@ you'll understand exactly what is happening.
 
 ###### PeopleListComponent
 ```
-Take a look at the PeopleListComponent and read the comments.
+Take a look at the PeopleListComponent.
 ```
 
 ###### PersonComponent
 ```
-Take a look at the PersonComponent and read the comments.
+Take a look at the PersonComponent.
 ```
 
 ### Assignment 2 Configurable services
@@ -82,7 +82,7 @@ Copy the methods of PeopleService into /common/rest/rest.service.ts.
 Create a property in RestService called url of type string. Replace all
 hardcoded '/people' strings with this property.
 
-Replace all Person return types with any types.
+Replace all Person return types with <any> types.
 
 The update and delete parameters types should be {id: number}.
 ```
@@ -171,8 +171,8 @@ Instead of injecting strings, we're going to create a better solution using gene
 ```
 Copy RestService's content to the GenericRestService (don't copy the OpaqueToken).
 ```
-Unlike RestService, the GenericService does not have to be used in the code directly.
-We can create different services that extend this GenericService, but first we
+Unlike RestService, the GenericRestService does not have to be used in the code directly.
+We can create different services that extend this GenericRestService, but first we
 have to make GenericRestService ready for proper inheritance.
 
 ```
@@ -189,12 +189,12 @@ This T is important because it will serve as all method types later on.
 Refactor all Person return types to T.
 ```
 
-We've specified that GenericService returns objects from the server of type T.
+We've specified that GenericRestService returns objects from the server of type T.
 Type T will be determined by the service that will inherit the GenericRestService.
 
 ###### Inheritance
 
-GenericRestService will serve like a superclass so we are never going to use it by itself.
+GenericRestService will serve like a superclass so we are not going to use it by itself.
 This means that the string can be provided the normal way (without injection).
 
 ```
@@ -210,7 +210,7 @@ Now the GenericRestService is ready to be extended.
 
 ```
 Empty PeopleService (except for its constructor) and let it extend 
-GenericService with type Person.
+GenericRestService with type Person.
 ```
 
 ```javascript
@@ -235,7 +235,7 @@ class Child extends Parent {
 }
 ```
 
-Now PeopleService inherits the Rest functionality of the GenericService
+Now PeopleService inherits the Rest functionality of the GenericRestService
 with correct return types.
 
 ```
@@ -263,8 +263,6 @@ When injecting this provided service into a class, you have to specify the Type
 in the constructor parameter declaration as well.
 
 ### Assignment 3 Advanced Components
-For a full overview of Lifecycle hook checkc out the [docs](https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html).
-During the first workshop you've encountered the first lifecycle hook, OnInit (ngOnInit).
 In this assignment we're going to setup some communication between components.
 
 #### Accessing component's children.
@@ -279,6 +277,9 @@ Add the following property to PeopleListComponent:
 This tells the PeopleListComponent to keep track of its children of type PersonComponent.
 
 ###### AfterViewInit:
+During the first workshop you've encountered the first lifecycle hook, OnInit (ngOnInit).
+For a full overview of Lifecycle hook check out the [docs](https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html).
+
 The PeopleListComponent can access the QueryList after the view initialized.
 ```javascript
 export class PeopleListComponent implements AfterViewInit{ 
@@ -299,7 +300,7 @@ Implement AfterViewInit to access the personComps property and log it.
 
 In the console should appear a QueryList with 0 _results.
 If you open the details of the object it magically contains results because it got filled after the server response arrived.
-To act upon this change of results QueryLists have a changes observable.
+To act upon this change of results, the QueryLists has a 'changes' observable.
 
 ```
 Subscribe to this.personComponents.changes with success parameter: (personCmps:QueryList<PersonComponent>) =>
@@ -435,7 +436,7 @@ dependency injection, it has no practical use. We're going to use RestService
 for this example because of its configurable url dependency.
 
 ```
-Provide RestService in HeaderComponent and provide an url ('/foo').
+Provide RestService in HeaderComponent and provide an url (REST_URL) ('/foo').
 Provide RestService in PeopleListComponent and provide an url ('/people')
 if you haven't already.
 ```
@@ -521,7 +522,7 @@ get value() {
 //usage in template {{value}}
 ```
 
-The more people available the more logs should show up. Every time
+The more people available the more logs will show up. Every time
 change detection kicks in, the template gets reloaded and the get method
 for _changeDetectionString gets called.
 
@@ -553,7 +554,7 @@ outside world's css. This way they can be truly isolated.
 The buttons in this application are styled by styles.css so the PersonComponent's
 buttons are styled from the outside. PersonComponent has the default encapsulation
 behaviour called Emulated. This means that it can receive styling from the outside,
-but will spread its own styling.
+but will not spread its own styling.
 
 ```
 Go to the browser to inspect the element of a person row and check
@@ -592,7 +593,7 @@ Inspect the html of PersonComponent in the browser.
 
 Now PersonComponent creates a shadow DOM that is completely isolated.
 This component will not be affected by any styling except for its own.
-You can see this because PersonComponent's buttons lost its round edges
+You can see this because PersonComponent's buttons lost their round edges
 that are defined in styles.css.
 
 ### Bonus
@@ -604,3 +605,7 @@ Implement a Pipe.
 Implement other Component lifecycle hooks.
 ```
 [Hooks](https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html)
+
+```
+Take a look at observable change detection.
+```
