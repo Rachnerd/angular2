@@ -128,7 +128,7 @@ will provide '/people' for every string dependency provided in PeopleListCompone
 ###### OpaqueToken
 _Creates a token that can be used in a DI Provider._
 ```javascript
-//underwater
+//Example of how the injector deals with OpaqueTokens.
 var t = new OpaqueToken("value");
 var injector = Injector.resolveAndCreate([
   provide(t, {useValue: "bindingValue"})
