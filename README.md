@@ -1,7 +1,7 @@
 # Angular2Workshop
 ###Quintor
 #####Rachèl Heimbach
-This second part of the workshop focuses on Dependency Injection, Reuable code and Advanced Components. 
+This second part of the workshop focuses on Dependency Injection, Reusable code and Advanced Components. 
 
 A great source to help out with the Angular syntax is this [cheat sheet](https://angular.io/cheatsheet).
 
