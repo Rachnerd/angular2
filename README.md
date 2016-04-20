@@ -429,7 +429,7 @@ Test it out by setting the attribute in html.
 this._el.style.backgroundColor = this.color || 'black';
 ```
 
-### Component nesting pt2
+#### Component nesting pt2
 This assignment is purely to illustrate how nested components deal with
 dependency injection, it has no practical use. We're going to use RestService
 for this example because of its configurable url dependency.
@@ -536,3 +536,4 @@ called once when they get pushed to the template. Even though the
 PersonComponent is immutable, it still triggers change detection when
 internal events get called (but will not always refresh the page).
 
+### ViewEncapsulation
