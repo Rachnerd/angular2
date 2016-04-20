@@ -437,7 +437,7 @@ this._el.style.backgroundColor = this.color || 'black';
 
 #### Component nesting pt2
 This assignment is purely to illustrate how nested components deal with
-dependency injection, it has no practical use. We're going to use RestService
+dependency injection, this particular implementation has no practical use. We're going to use RestService
 for this example because of its configurable url dependency.
 
 ```
@@ -582,7 +582,7 @@ the component's default encapsulation behavior. Let's change this.
 In PersonComponent, add the encapsulation attribute to the component decorator
 and set its value to ViewEncapsulation.None.
 
-Check the application. The header buttons should also be affected by 
+Check the application. The header buttons should be affected by 
 PersonComponent's css.
 ```
 
