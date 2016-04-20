@@ -115,7 +115,8 @@ provide(String, {useValue: ''})
 ```
 Provide a String '/people' in PeopleListComponent's providers array.
 
-Inject it into PeopleListComponent and call get.
+Inject it into PeopleListComponent and retrieve the array of Person and
+log it.
 ```
 
 Now the injector passes the '/people' string into the RestService, meaning that we've set a
@@ -261,6 +262,11 @@ provide(Service, {
 
 When injecting this provided service into a class, you have to specify the Type 
 in the constructor parameter declaration as well.
+
+```
+Inject GenericRestService into PeopleListComponent and retrieve the array of Person and
+log it.
+```
 
 ### Assignment 3 Advanced Components
 In this assignment we're going to setup some communication between components.
@@ -608,3 +614,4 @@ Implement other Component lifecycle hooks.
 ```
 Take a look at observable change detection.
 ```
+[Pascal Precht Change Detection NgNL2016](http://pascalprecht.github.io/slides/angular-2-change-detection-explained/#/1)
