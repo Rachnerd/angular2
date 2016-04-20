@@ -107,7 +107,7 @@ the red errors of death in the console.
 Just like any other dependency so far, the url string dependency has to be provided
 somewhere to the injector.
 
-```javscript
+```javascript
 //providing a String dependency
 provide(String, {useValue: ''})
 ```
@@ -144,7 +144,7 @@ Add an urlToken dependency of type OpaqueToken to the RestService.
 Tell the injector that it has to be the REST_URL by using Inject().
 ```
 
-```
+```javascript
 //RestService
 constructor(private http: Http, @Inject(REST_URL) urlToken: OpaqueToken) {
     this.url = urlToken.toString();
