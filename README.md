@@ -596,3 +596,11 @@ You can see this because PersonComponent's buttons lost its round edges
 that are defined in styles.css.
 
 ### Bonus
+```
+Implement a Pipe.
+```
+
+```
+Implement other Component lifecycle hooks.
+```
+[Hooks](https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html)
