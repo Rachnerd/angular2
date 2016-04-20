@@ -263,7 +263,11 @@ When injecting this provided service into a class, you have to specify the Type
 in the constructor parameter declaration as well.
 
 ### Assignment 3 Component lifecycle.
-#### ViewChildren
+For a full overview of Lifecycle hook checkc out the [docs](https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html).
+During the first workshop you've encountered the first lifecycle hook, OnInit (ngOnInit).
+In this assignment we're going to setup some communication between components.
+
+#### Accessing component's children.
 PeopleListComponent renders some PersonComponents in its view making them its ViewChildren.
 These ViewChildren can be retrieved in the PeopleListComponent class.
 
@@ -275,7 +279,7 @@ Add the following property to PeopleListComponent:
 This tells the PeopleListComponent to keep track of its children of type PersonComponent.
 
 ###### AfterViewInit:
-The PeopleListComponent can access the QUeryList after the view initialized.
+The PeopleListComponent can access the QueryList after the view initialized.
 ```javascript
 export class PeopleListComponent implements AfterViewInit{ 
     //...
@@ -318,7 +322,13 @@ In PersonComponent inject PeopleListComponent by using a forward referenced inje
 Print PeopleListComponent's people.
 ```
 
-#### Component ng-content
+Now you know how to access components directly.
+
+#### Component nesting pt1
+So far we've only dealt with child parent relations through providing the components in
+the directives array configuration. It is also possible to pass children to components
+without having to inject them specifically in that component.
+###### ng-content
 The behaviour of ng-content is similar to transclusion in Angular 1.
 ```
 In common/header/header.component.html place <ng-content></ng-content> in the first block.
@@ -364,7 +374,8 @@ Now you should have a header with 2 buttons that are placed there by the PeopleL
 Behaviour is added to the Header without the Header itself being aware of it (so no need to pass anything).
 
 #### Directives
-For this assignment a basic Html altering directive will be created.
+For this assignment a basic Html altering directive will be created which will be used later
+to illustrate how dependencies get resolved in nested components.
 
 ```
 Create a new folder called directives and create a hoover-color.directive.ts
@@ -383,7 +394,7 @@ Now the directives doesn't do anything. The HooverColor directive should change 
 })
 class Example {
     fnName() {
-        //do something
+        //do something when 'eventName' is triggered
     }
 }
 ```
@@ -405,32 +416,28 @@ Configure the directive so it changes the color of the HTMLElement
 by setting its style.backgroundColor on mouseenter and resets it on mouseout.
 ```
 
-Just like components, directives have in and outputs. This means that besides
+Just like components, directives have ins and outputs. This means that besides
 Html manipulation and native event handling, directives can also receive input
 and output custom events. (all defined in the parent HTMLElement of the directive).
 
 ```
-Create an Input string that can determine the color.
-Test it out by setting the attribute in html
+Create an Input() string that determines the color.
+Test it out by setting the attribute in html.
 ```
 
 ```javascript
 this._el.style.backgroundColor = this.color || 'black';
 ```
 
-### Dependency injection example scenario
+### Component nesting pt2
 This assignment is purely to illustrate how nested components deal with
-dependency injection, it has no practical use.
+dependency injection, it has no practical use. We're going to use RestService
+for this example because of its configurable url dependency.
 
 ```
-Create a TestService and give it a dependency of type string.
-```
-
-This works because we've provided the RestService in the PeopleListComponent
-which is the owner of the template HeaderComponent is in.
-
-```
-Provide RestService in HeaderComponent and provide a different url ('/foo').
+Provide RestService in HeaderComponent and provide an url ('/foo').
+Provide RestService in PeopleListComponent and provide an url ('/people')
+if you haven't already.
 ```
 
 Now we have 2 instances of RestService.
@@ -443,7 +450,7 @@ view, it is a direct child and not a indirect child. Let's see how an implementa
 of an indirect child looks like.
 
 ```
-Add the hooverColor attribute to the left button inside the header 
+Add the hooverColor attribute to the left button inside the header element
 (in PeopleListComponent).
 ```
 
@@ -489,3 +496,43 @@ check the next parent which is PeopleListComponent. PeopleListComponent provides
 normal way so HooverColorDirective can use that dependency.
 
 !!Mind that this works the same with nested components, this example happens to use a directive.
+
+### Assignment 3 Change detection
+A powerful feature of Angular 2 is its change detection. To see how this detection works underwater
+we're going to use PersonComponent as test subject.
+
+```
+Create a private string called _changeDetectionString and give it
+a value (doesn't matter what).
+
+Write a get method that logs `${this.person.firstName} change detected`
+and returns _changeDetectionString 
+
+Add the property (get) to the template and check the console.
+```
+
+The more people available the more logs should show up. Every time
+change detection kicks in, the template gets reloaded and the get method
+for _changeDetectionString gets called.
+
+```
+Click some buttons in the application and check how many times change 
+detection gets logged.
+```
+
+To increase performance of the application immutable strategies can be 
+implemented.
+
+```
+Make PersonComponent immutable by configuring the changeDetection attribute
+of @Component() by setting it to ChangeDetectionStrategy.OnPush.
+
+Click some more buttons and check the console.
+```
+
+The output of change detection should be way less now because the 
+change detector skips PersonComponent. PersonComponent's only get
+called once when they get pushed to the template. Even though the 
+PersonComponent is immutable, it still triggers change detection when
+internal events get called (but will not always refresh the page).
+
