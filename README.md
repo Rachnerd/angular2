@@ -510,6 +510,16 @@ and returns _changeDetectionString
 
 Add the property (get) to the template and check the console.
 ```
+```javascript
+private _value;
+
+get value() {
+    //log
+    return _value;
+}
+
+//usage in template {{value}}
+```
 
 The more people available the more logs should show up. Every time
 change detection kicks in, the template gets reloaded and the get method
@@ -543,7 +553,7 @@ outside world's css. This way they can be truly isolated.
 The buttons in this application are styled by styles.css so the PersonComponent's
 buttons are styled from the outside. PersonComponent has the default encapsulation
 behaviour called Emulated. This means that it can receive styling from the outside,
-but will contain its own styling.
+but will spread its own styling.
 
 ```
 Go to the browser to inspect the element of a person row and check
@@ -553,3 +563,34 @@ Html elements of PersonComponent.
 
 These ng-content attributes are added so the component can use very specific
 css selectors so it doesn't affect the outside world.
+
+```
+In person.component.css add a background color for every button.
+button { background-color: 'blue' }
+```
+
+As expected, the header buttons are not affected by this css because of
+the component's default encapsulation behavior. Let's change this.
+
+```
+In PersonComponent, add the encapsulation attribute to the component decorator
+and set its value to ViewEncapsulation.None.
+
+Check the application. The header buttons should also be affected by 
+PersonComponent's css.
+```
+
+We've disabled the encapsulation which means PersonComponent's css so it
+now behaves like regular css.
+
+Imagine a component that shouldn't affect or be affected whatsoever.
+
+```
+Change the encapsulation of PersonComponent to ViewEncapsulation.Native.
+Inspect the html of PersonComponent in the browser.
+```
+
+Now PersonComponent creates a shadow DOM that is completely isolated.
+This component will not be affected by any styling except for its own.
+You can see this because PersonComponent's buttons lost its round edges
+that are defined in styles.css.
