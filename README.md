@@ -379,8 +379,7 @@ For this assignment a basic Html altering directive will be created which will b
 to illustrate how dependencies get resolved in nested components.
 
 ```
-Create a new folder called directives and create a hoover-color.directive.ts
-Export a class called HooverColorDirective and decorate it with @Directive.
+Export a class called HooverColorDirective and decorate it with @Directive (in /directives/hoover-color.directive.ts).
 Set the selector of the @Directive to '[hooverColor]'.
 ```
 Now we've created an Angular 2 directive. To use this directive it has to be imported and provided in the directives array of a component.
