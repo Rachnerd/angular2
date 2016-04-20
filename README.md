@@ -536,4 +536,20 @@ called once when they get pushed to the template. Even though the
 PersonComponent is immutable, it still triggers change detection when
 internal events get called (but will not always refresh the page).
 
-### ViewEncapsulation
+### Assignment 4 ViewEncapsulation
+Angular's component have the capability to shield their Html from the
+outside world's css. This way they can be truly isolated.
+
+The buttons in this application are styled by styles.css so the PersonComponent's
+buttons are styled from the outside. PersonComponent has the default encapsulation
+behaviour called Emulated. This means that it can receive styling from the outside,
+but will contain its own styling.
+
+```
+Go to the browser to inspect the element of a person row and check
+its Html. You should see generated ng-content attributes all over the
+Html elements of PersonComponent.
+```
+
+These ng-content attributes are added so the component can use very specific
+css selectors so it doesn't affect the outside world.
