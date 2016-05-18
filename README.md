@@ -173,8 +173,7 @@ In Angular 2 Http requests return Observables (Rx.js) instead of Promises.
 ```
 Create a get() method in PeopleService. We know that the server 
 will return an array of Person so let the return type of get() be an
-Array of Person wrapped in an Observable:
-Observable<Array<Person>>
+observable with type Person arrray (diamond operators)
 
 Inside the method: 
 return this.Http.get('people');
@@ -408,25 +407,6 @@ url of the newly created Person.
 
 Implement a getById(id:number) (in PeopleService) which calls /people/:id
 and make sure that the create method returns the new person.
-```
-
-Answer to POST assignment. Read through the method so you understand what's going on.
-We create our own observable that will succeed after 2 calls.
-```javascript
-create(person:Person): Observable<Person> {
-    return new Observable(observer => {
-        this.Http.post('people', JSON.stringify(params)).subscribe(
-            res => {
-                let location = res.headers.get('location');
-                this.Http.get(location).map(res => res.json()).subscribe(
-                    person => observer.next(person),
-                    err => observer.error(err)
-                )
-            },
-            err => observer.error(err)
-        )
-    });
-}
 ```
 
 ## Assignment PersonComponent
